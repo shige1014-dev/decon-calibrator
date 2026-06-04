@@ -1,0 +1,10 @@
+{
+  "name": "投资初衷校准器 · CALIBRATOR",
+  "short_name": "校准器",
+  "description": "委员会版 · 像成熟投资人审查一份投资备忘录",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0E1218",
+  "theme_color": "#0E1218",
+  "icons": []
+}
