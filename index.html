@@ -530,6 +530,52 @@ footer.foot a:hover{color:var(--gold-b)}
 .note-card .np-flag.p-casual{color:var(--mut);opacity:.7}
 .note-card.p-high{box-shadow:0 0 0 1px rgba(255,77,61,.32)}
 .note-card.p-casual{opacity:.78}
+
+/* ─── v1.3b · 笔记墙 home grid ─── */
+.wall-statsbar{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:0;border:1px solid var(--line);border-radius:12px;margin:20px 0 22px;overflow:hidden;background:linear-gradient(180deg,var(--bg2) 0%,var(--bg) 100%)}
+.wsb-cell{padding:14px 18px;border-right:1px solid var(--line);font-family:var(--mono);font-size:10px;letter-spacing:.22em;color:var(--mut);text-transform:uppercase}
+.wsb-cell:last-child{border-right:none}
+.wsb-cell b{display:block;font-family:var(--mono);font-size:22px;color:var(--ink);font-weight:600;margin-top:6px;letter-spacing:0;text-transform:none;line-height:1.1}
+.wsb-cell b.acc{color:var(--acc)}
+.wsb-cell b.ok{color:var(--ok)}
+.wsb-cell b.neg{color:var(--neg)}
+.wsb-cell em{font-style:normal;font-family:var(--mono);font-size:11px;color:var(--mut);letter-spacing:.05em;margin-left:4px;font-weight:400}
+@media(max-width:640px){.wsb-cell{padding:10px 12px}.wsb-cell b{font-size:18px}}
+
+.wall-head{display:flex;justify-content:space-between;align-items:baseline;margin:30px 0 12px;flex-wrap:wrap;gap:10px;font-family:var(--mono);font-size:10.5px;letter-spacing:.24em;color:var(--acc);font-weight:600;text-transform:uppercase}
+.wall-head em{font-style:normal;color:var(--mut);font-size:9.5px;letter-spacing:.14em}
+
+.books-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-bottom:24px}
+.book-card{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:18px 18px 16px;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:10px;transition:border-color .15s,transform .12s,box-shadow .15s;position:relative}
+.book-card:hover{border-color:var(--acc);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.book-card.demo{border-style:dashed;border-color:var(--cyan);opacity:.92}
+.book-card.demo::before{content:"DEMO";position:absolute;top:8px;right:10px;font-family:var(--mono);font-size:8px;letter-spacing:.22em;color:var(--cyan);font-weight:700;padding:2px 6px;border:1px solid var(--cyan);border-radius:3px}
+.bc-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.bc-tk{font-family:var(--mono);font-size:18px;color:var(--acc);font-weight:600;letter-spacing:.06em;padding:5px 11px;border:1px solid var(--acc);background:rgba(255,225,92,.06);line-height:1;border-radius:6px}
+.bc-state{font-family:var(--mono);font-size:9px;letter-spacing:.2em;font-weight:600;padding:3px 9px;border:1px solid currentColor;border-radius:5px;align-self:flex-start;text-transform:uppercase}
+.bc-state.s-清醒{color:var(--st-clear)}
+.bc-state.s-漂移{color:var(--st-drift)}
+.bc-state.s-干扰{color:var(--st-noise)}
+.bc-state.s-接管{color:var(--st-chaos)}
+.bc-state.s-未评{color:var(--mut)}
+.bc-name{font-family:'Noto Serif SC',serif;font-size:14.5px;color:var(--ink);font-weight:500;line-height:1.3;letter-spacing:-.005em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bc-name em{font-style:normal;color:var(--mut);font-family:var(--mono);font-size:10px;letter-spacing:.1em;margin-left:6px}
+.bc-price{display:flex;align-items:baseline;gap:8px;font-family:var(--mono);font-size:14px;color:var(--ink);font-weight:500}
+.bc-price em{font-style:normal;font-size:11px;letter-spacing:.04em;font-weight:600}
+.bc-price em.up{color:var(--ok)} .bc-price em.dn{color:var(--neg)}
+.bc-price .bc-load{color:var(--mut);font-size:10px;letter-spacing:.18em;font-weight:400}
+.bc-tags{display:flex;gap:5px;flex-wrap:wrap;margin:-2px 0 0;min-height:18px}
+.bc-tag{font-family:var(--mono);font-size:11.5px;font-weight:600;line-height:1}
+.bc-divider{height:1px;background:var(--line);margin:2px 0}
+.bc-foot{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;color:var(--mut)}
+.bc-foot b{color:var(--ink);font-weight:600;font-family:var(--mono)}
+.bc-memo{font-family:'Noto Serif SC',serif;font-size:13px;color:var(--ink-2);line-height:1.6;padding-left:12px;border-left:2px solid var(--acc);max-height:42px;overflow:hidden;text-overflow:ellipsis;letter-spacing:.005em}
+.bc-empty{font-style:italic;color:var(--mut);font-size:12.5px}
+.bc-new{display:flex;align-items:center;justify-content:center;background:transparent;border:1px dashed var(--acc);color:var(--acc);border-radius:12px;padding:30px 18px;text-decoration:none;font-family:var(--mono);font-size:13px;letter-spacing:.18em;font-weight:600;transition:background .15s,color .15s}
+.bc-new:hover{background:var(--acc-soft);color:var(--acc-b)}
+.bc-new b{display:block;font-size:24px;line-height:1;margin-bottom:8px}
+
+@media(max-width:520px){.books-grid{grid-template-columns:1fr;gap:10px}}
 </style>
 </head>
 <body>
@@ -566,18 +612,12 @@ footer.foot a:hover{color:var(--gold-b)}
     <h1 class="h-title">股票日记<em>SNAPSHOT THE THESIS</em></h1>
     <p class="h-sub">情绪化会改写认知 · <b>7 题 ≤ 45 秒</b> + 一句话理由 — 把每一次买入的初衷封进时间胶囊。下次再看时 · 你才知道当时的自己是清醒还是被牵着走。</p>
     <div class="cta-row">
-      <a class="btn primary big" href="#/new">+ 新建日记</a>
+      <a class="btn primary big" href="#/new">+ 新建笔记</a>
       <span style="font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--mut)" id="bookCount">0 本日记 · 0 篇</span>
     </div>
   </div>
 
-  <div class="sec-head">
-    <div>
-      <div class="sec-lab">◇ MY BOOKS · 我的日记本</div>
-      <h2 class="sec-h">按股票分组 · 最新心境优先</h2>
-    </div>
-  </div>
-  <div class="books" id="bookList"></div>
+  <div id="bookList"></div>
 </section>
 
 <!-- NEW · wizard -->
@@ -889,42 +929,131 @@ window.addEventListener("hashchange", route);
 function renderHome(){
   const d = load();
   const tickers = Object.keys(d.books);
-  const total = tickers.reduce((s,t)=>s+(d.books[t].entries||[]).length,0);
-  document.getElementById("bookCount").textContent = `${tickers.length} 本日记 · ${total} 篇`;
-  const hasDemo = tickers.some(t => d.books[t]._demo);
   const list = document.getElementById("bookList");
   if(!tickers.length){
-    list.innerHTML = `<div class="empty"><b>还没有日记本</b>选一只股票 · 点 + 新建日记 · 30 秒内完成第一篇。</div>`;
+    document.getElementById("bookCount").textContent = "0 本 · 0 篇";
+    list.innerHTML = `<div class="empty"><b>还没有日记本</b>选一只股票 · 点 + 新建日记 · 30 秒开本第一篇。</div>` + legendHtml();
+    bindLegend();
     return;
   }
+
+  // gather rows + stats
   const rows = tickers.map(tk => {
     const b = d.books[tk];
-    const entries = (b.entries||[]).slice().sort((a,b)=>b.date.localeCompare(a.date));
-    const latest = entries[0];
-    return { tk, b, latest, count: entries.length, demo: !!b._demo };
+    const entriesAll = (b.entries||[]).slice().sort((a,b)=>b.date.localeCompare(a.date));
+    const latest = entriesAll[0];
+    const theses = entriesAll.filter(e => (e.kind || "thesis") === "thesis");
+    const notes  = entriesAll.filter(e => e.kind === "note");
+    const latestThesis = theses[0];
+    const latestState = latestThesis ? latestThesis.state : (latest?.state || "未评");
+    return { tk, b, latest, latestThesis, latestState, thesesN: theses.length, notesN: notes.length, count: entriesAll.length, demo: !!b._demo };
   }).sort((a,b)=> (b.latest?.date||"").localeCompare(a.latest?.date||""));
 
+  // global stats
+  const totalBooks = rows.length;
+  const totalEntries = rows.reduce((s,r)=>s+r.count,0);
+  const totalNotes = rows.reduce((s,r)=>s+r.notesN,0);
+  const allDates = new Set();
+  rows.forEach(r => (r.b.entries||[]).forEach(e => { if(e.date) allDates.add(e.date); }));
+  const streak = computeStreak([...allDates]);
+  const stateCount = { 清醒:0, 漂移:0, 干扰:0, 接管:0 };
+  rows.forEach(r => { if(stateCount[r.latestState] != null) stateCount[r.latestState]++; });
+  const topState = Object.entries(stateCount).sort((a,b)=>b[1]-a[1])[0];
+
+  document.getElementById("bookCount").textContent = `${totalBooks} 本 · ${totalEntries} 篇`;
+
+  const hasDemo = rows.some(r => r.demo);
   const demoBanner = hasDemo ? `
     <div class="demo-banner">
-      <b>DEMO</b><span>NVDA 示例日记本 · 3 篇 · 让你先看看完成的样子</span>
+      <b>DEMO</b><span>NVDA 示例日记本 · 让你先看看完成的样子</span>
       <button id="btnDismissDemo">✕ 隐藏示例</button>
     </div>` : "";
 
-  list.innerHTML = demoBanner + rows.map(r => {
-    const tags = r.latest ? computeTags(r.latest.answers) : [];
-    return `
-    <a class="book-row" href="#/book/${encodeURIComponent(r.tk)}">
-      <span class="br-tk">${escapeHtml(r.tk)}</span>
-      <span class="br-name">${escapeHtml(r.b.name || r.tk)}<em>${escapeHtml(r.b.exchange || "")}</em>${r.demo ? " <em style='color:var(--cyan);font-family:var(--mono);font-style:normal;font-size:9px;letter-spacing:.18em'>· DEMO</em>" : ""}${tags.length ? renderTagChips(tags) : ""}</span>
-      <span class="br-count">${r.count} 篇</span>
-      <span class="br-date">${escapeHtml(r.latest?.date || "")}</span>
-      <span class="br-state s-${r.latest?.state || "干扰"}">${r.latest?.state || "—"}</span>
-    </a>
-  `;}).join("") + legendHtml();
+  const statsBar = `
+    <div class="wall-statsbar">
+      <div class="wsb-cell">日记本<b class="acc">${totalBooks}</b></div>
+      <div class="wsb-cell">篇数<b>${totalEntries}</b><em>(${totalEntries-totalNotes} thesis · ${totalNotes} 便条)</em></div>
+      <div class="wsb-cell">连续记录<b class="ok">${streak} 天</b></div>
+      <div class="wsb-cell">主导心境<b class="s-${topState[0]}" style="color:var(--st-${topState[0]})">${topState[0]}</b><em>${topState[1]} 本</em></div>
+    </div>
+  `;
+
+  const wallHead = `<div class="wall-head"><span>◇ 笔记墙 · MY BOOKS</span><em>${totalBooks} 本 · 按最新活动排</em></div>`;
+
+  const cards = rows.map(r => bookCardHtml(r)).join("");
+  const newCard = `<a class="bc-new" href="#/new"><span><b>+</b>新建笔记</span></a>`;
+
+  list.innerHTML = demoBanner + statsBar + wallHead + `<div class="books-grid">${cards}${newCard}</div>` + legendHtml();
 
   const btnD = document.getElementById("btnDismissDemo");
   if(btnD) btnD.addEventListener("click",(e)=>{ e.preventDefault(); dismissDemo(); });
   bindLegend();
+
+  // fetch live prices in background · update each card when arrives
+  rows.forEach(r => hydrateBookCardPrice(r.tk));
+}
+
+function bookCardHtml(r){
+  const tags = r.latestThesis ? computeTags(r.latestThesis.answers) : [];
+  const tagHtml = tags.length
+    ? tags.map(t => `<span class="bc-tag" style="color:${PSY_TAGS[t]?.color || 'var(--mut)'}">${PSY_TAGS[t]?.sym || ''}</span>`).join("")
+    : `<span class="bc-empty">无 thesis tag</span>`;
+  const memo = r.latest?.memo
+    ? `<div class="bc-memo">${escapeHtml(r.latest.memo)}</div>`
+    : `<div class="bc-memo bc-empty">还没写一句话</div>`;
+  return `
+    <a class="book-card ${r.demo ? "demo" : ""}" href="#/book/${encodeURIComponent(r.tk)}" data-tk="${escapeHtml(r.tk)}">
+      <div class="bc-head">
+        <span class="bc-tk">${escapeHtml(r.tk)}</span>
+        <span class="bc-state s-${r.latestState}">${r.latestState}${r.latestThesis ? " · "+r.latestThesis.score+"/21" : ""}</span>
+      </div>
+      <div class="bc-name">${escapeHtml(r.b.name || r.tk)}<em>${escapeHtml(r.b.exchange || "")}</em></div>
+      <div class="bc-price" id="bcp-${escapeHtml(r.tk)}"><span class="bc-load">载入价…</span></div>
+      <div class="bc-tags">${tagHtml}</div>
+      <div class="bc-divider"></div>
+      ${memo}
+      <div class="bc-foot">
+        <span>${r.thesesN} thesis · ${r.notesN} 便条</span>
+        <span>最新 <b>${escapeHtml(r.latest?.date || "—")}</b></span>
+      </div>
+    </a>
+  `;
+}
+
+async function hydrateBookCardPrice(tk){
+  try{
+    const ctrl = new AbortController();
+    const to = setTimeout(()=> ctrl.abort(), 5000);
+    const r = await fetch(`/api/quote?ticker=${encodeURIComponent(tk)}`, { signal: ctrl.signal });
+    clearTimeout(to);
+    if(!r.ok) throw new Error();
+    const j = await r.json();
+    const el = document.getElementById("bcp-"+tk);
+    if(!el || j.price == null) return;
+    const cls = j.change > 0 ? "up" : j.change < 0 ? "dn" : "";
+    const sign = j.change > 0 ? "+" : "";
+    el.innerHTML = `<span>${formatPrice(j.price)}</span><em class="${cls}">${sign}${j.changePct ?? 0}%</em>${j.currency ? `<em style="color:var(--mut);font-size:9.5px;font-weight:400">${escapeHtml(j.currency)}</em>` : ""}`;
+  }catch(e){
+    const el = document.getElementById("bcp-"+tk);
+    if(el) el.innerHTML = `<em style="color:var(--mut);font-size:10px;letter-spacing:.18em;font-weight:400">价 · 暂不可用</em>`;
+  }
+}
+
+function computeStreak(dates){
+  if(!dates.length) return 0;
+  const sorted = dates.sort().reverse(); // newest first
+  const today = new Date().toISOString().slice(0,10);
+  const yesterday = (()=>{ const y=new Date(); y.setDate(y.getDate()-1); return y.toISOString().slice(0,10); })();
+  // streak counts back from today (or yesterday if no entry today)
+  let anchor = sorted[0] === today ? today : (sorted[0] === yesterday ? yesterday : sorted[0]);
+  let cursor = new Date(anchor);
+  let streak = 0;
+  const set = new Set(sorted);
+  while(set.has(cursor.toISOString().slice(0,10))){
+    streak++;
+    cursor.setDate(cursor.getDate()-1);
+  }
+  return streak;
 }
 
 function legendHtml(){
