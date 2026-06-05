@@ -13,7 +13,13 @@
 <meta name="theme-color" content="#1A1612" media="(prefers-color-scheme: dark)">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="股票日记">
-<script>try{document.documentElement.setAttribute('data-theme',localStorage.getItem('journal_theme')||'paper')}catch(e){}</script>
+<script>try{
+  // v2 palette migration · 老 'dark' 值忽略一次 · 强制 paper 重启认知
+  var migrated = localStorage.getItem('journal_palette_v2');
+  var t = localStorage.getItem('journal_theme');
+  if(!migrated){ t = 'paper'; localStorage.setItem('journal_theme','paper'); localStorage.setItem('journal_palette_v2','1'); }
+  document.documentElement.setAttribute('data-theme', t || 'paper');
+}catch(e){}</script>
 <style>
 /* ─── 老纸日记本 palette · default paper · dark = 夜灯 lamp ─── */
 :root, [data-theme="paper"]{
