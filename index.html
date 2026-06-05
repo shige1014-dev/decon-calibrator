@@ -424,6 +424,77 @@ footer.foot a:hover{color:var(--gold-b)}
 .type-chip{border-radius:0}
 .psy-tags{gap:5px}
 .psy-tag{padding:2px 8px}
+
+/* ─── v1.3a · 便条框 + thesis card + note modal ─── */
+.bk-section-h{display:flex;justify-content:space-between;align-items:baseline;gap:14px;flex-wrap:wrap;margin:32px 0 14px;font-family:var(--mono);font-size:10.5px;letter-spacing:.24em;color:var(--acc);font-weight:700;text-transform:uppercase}
+.bk-section-h em{font-style:normal;color:var(--mut);font-size:9.5px;letter-spacing:.14em;font-weight:500}
+.bk-section-h .h-count{color:var(--mut);font-family:var(--mono);font-size:11px;letter-spacing:.1em}
+
+/* thesis card · 完整深度卡 · 一只股仅 1-N 张作基线 */
+.thesis-card{padding:22px 22px 18px;border:1px solid var(--line);background:var(--bg2);border-radius:12px;margin-bottom:18px;position:relative}
+.thesis-card::before{content:"THESIS · 基线判断";position:absolute;top:-9px;left:18px;font-family:var(--mono);font-size:9.5px;letter-spacing:.24em;color:var(--acc);background:var(--bg);padding:0 8px;font-weight:700}
+
+/* 便条框 · sticky note board · 累积区 */
+.notes-box{padding:16px;border:1px solid var(--line);border-radius:12px;background:linear-gradient(180deg,var(--bg2) 0%,var(--bg) 100%);position:relative;min-height:80px}
+.notes-box::before{content:"";position:absolute;left:18px;right:18px;top:8px;height:2px;background:repeating-linear-gradient(90deg,var(--acc-soft) 0,var(--acc-soft) 4px,transparent 4px,transparent 8px);opacity:.5;border-radius:2px}
+.notes-stack{display:flex;flex-direction:column;gap:12px;margin-top:12px}
+.notes-empty{padding:30px 14px;text-align:center;font-family:var(--mono);font-size:11px;color:var(--mut);letter-spacing:.14em;text-transform:uppercase}
+
+/* 便条 note · 紧凑卡 · type 色边 */
+.note-card{background:var(--bg2);border:1px solid var(--line);border-left:4px solid var(--acc);border-radius:8px;padding:12px 16px;position:relative;transition:border-color .15s,transform .12s}
+.note-card:hover{transform:translateX(2px)}
+.note-card.t-buy{border-left-color:var(--ok)}
+.note-card.t-add{border-left-color:var(--cyan)}
+.note-card.t-trim{border-left-color:var(--warn)}
+.note-card.t-sell{border-left-color:var(--neg)}
+.note-card.t-review{border-left-color:var(--acc)}
+.note-card-row{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;font-family:var(--mono);font-size:10.5px;color:var(--mut);letter-spacing:.06em;margin-bottom:6px}
+.note-card-date{color:var(--acc);font-weight:600;letter-spacing:.12em}
+.note-card-type{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.2em;padding:2px 8px;border:1px solid currentColor;border-radius:4px}
+.note-card-type.t-buy{color:var(--ok)}
+.note-card-type.t-add{color:var(--cyan)}
+.note-card-type.t-trim{color:var(--warn)}
+.note-card-type.t-sell{color:var(--neg)}
+.note-card-type.t-review{color:var(--acc)}
+.note-card-qty{font-family:var(--mono);font-size:11px;color:var(--ink-2);letter-spacing:.04em}
+.note-card-qty b{font-family:var(--mono);font-weight:700;color:var(--ink)}
+.note-card-memo{font-family:'Noto Serif SC',serif;font-size:14.5px;color:var(--ink);line-height:1.7;margin:4px 0 0;letter-spacing:.005em}
+.note-card-foot{display:flex;justify-content:space-between;align-items:center;margin-top:8px;font-family:var(--mono);font-size:9.5px;color:var(--mut);letter-spacing:.06em}
+.note-card-pnl{font-family:var(--mono);font-weight:700}
+.note-card-pnl.up{color:var(--ok)} .note-card-pnl.dn{color:var(--neg)}
+.note-card-del{background:transparent;border:none;color:var(--mut);font-family:var(--mono);font-size:10px;letter-spacing:.14em;cursor:pointer;text-transform:uppercase;padding:2px 0}
+.note-card-del:hover{color:var(--neg)}
+
+/* 贴便条按钮 + 重做 thesis */
+.bk-actions{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 0}
+
+/* note modal · inline overlay */
+.note-modal{position:fixed;inset:0;background:rgba(14,19,24,.78);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:50;display:none;align-items:center;justify-content:center;padding:20px}
+.note-modal.show{display:flex}
+.note-modal-card{background:var(--bg2);border:1px solid var(--acc);border-radius:12px;max-width:520px;width:100%;padding:24px;box-shadow:0 24px 60px rgba(0,0,0,.6)}
+.note-modal-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:18px}
+.note-modal-h{font-family:'Noto Serif SC',serif;font-size:18px;color:var(--ink);font-weight:800}
+.note-modal-h em{color:var(--mut);font-style:normal;font-family:var(--mono);font-size:11px;letter-spacing:.18em;margin-left:8px}
+.note-modal-close{background:transparent;border:none;color:var(--mut);font-family:var(--mono);font-size:14px;cursor:pointer;line-height:1;padding:4px 8px}
+.note-modal-close:hover{color:var(--acc)}
+
+.note-types{display:grid;grid-template-columns:repeat(5,1fr);gap:0;border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-bottom:18px}
+.note-type-btn{padding:10px 4px;background:transparent;border:none;border-right:1px solid var(--line);font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--mut);font-weight:600;cursor:pointer;text-transform:uppercase;transition:background .12s,color .12s}
+.note-type-btn:last-child{border-right:none}
+.note-type-btn:hover{background:rgba(255,225,92,.06);color:var(--ink)}
+.note-type-btn.on{background:rgba(255,225,92,.16);color:var(--ink)}
+.note-type-btn b{display:block;font-family:'Noto Serif SC',serif;font-size:12.5px;font-weight:700;margin-top:3px;color:var(--ink);letter-spacing:0}
+.note-type-btn.on b{color:var(--acc-b)}
+@media(max-width:520px){.note-type-btn{padding:8px 2px;font-size:10px}.note-type-btn b{font-size:11px}}
+
+.note-qp{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
+.note-qp label{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.22em;color:var(--mut);text-transform:uppercase;margin-bottom:4px}
+.note-qp input{width:100%;background:transparent;border:none;border-bottom:1px solid var(--line);padding:6px 0;color:var(--ink);font-family:var(--mono);font-size:14.5px;outline:none;transition:border-color .15s}
+.note-qp input:focus{border-bottom-color:var(--acc)}
+.note-memo-wrap{margin-bottom:18px}
+.note-memo-wrap label{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.22em;color:var(--mut);text-transform:uppercase;margin-bottom:6px}
+.note-memo-wrap textarea{width:100%;background:transparent;border:none;border-left:2px solid var(--acc);border-radius:0 8px 8px 0;padding:8px 0 8px 14px;color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.65;outline:none;resize:vertical;min-height:64px}
+.note-modal-foot{display:flex;justify-content:flex-end;gap:10px}
 </style>
 </head>
 <body>
@@ -591,6 +662,35 @@ footer.foot a:hover{color:var(--gold-b)}
   </span>
 </footer>
 
+<!-- ─── 便条 mini-modal ─── -->
+<div class="note-modal" id="noteModal" role="dialog" aria-modal="true">
+  <div class="note-modal-card">
+    <div class="note-modal-head">
+      <div class="note-modal-h">贴一条<em id="noteModalTk">—</em></div>
+      <button class="note-modal-close" id="noteModalClose" type="button">✕</button>
+    </div>
+    <div class="note-types" id="noteTypes">
+      <button class="note-type-btn" type="button" data-t="buy"><span>买入</span><b>BUY</b></button>
+      <button class="note-type-btn on" type="button" data-t="add"><span>加仓</span><b>ADD</b></button>
+      <button class="note-type-btn" type="button" data-t="trim"><span>减仓</span><b>TRIM</b></button>
+      <button class="note-type-btn" type="button" data-t="sell"><span>卖出</span><b>SELL</b></button>
+      <button class="note-type-btn" type="button" data-t="review"><span>复盘</span><b>REVIEW</b></button>
+    </div>
+    <div class="note-qp">
+      <div><label>数量 (股)</label><input id="noteQty" type="text" inputmode="decimal" placeholder="50"></div>
+      <div><label>价格</label><input id="notePrice" type="text" inputmode="decimal" placeholder="拉实时 · 可改"></div>
+    </div>
+    <div class="note-memo-wrap">
+      <label>一句话理由</label>
+      <textarea id="noteMemo" maxlength="200" placeholder="今天加仓 50 股 · 因为..."></textarea>
+    </div>
+    <div class="note-modal-foot">
+      <button class="btn" id="noteModalCancel" type="button">取消</button>
+      <button class="btn primary" id="noteModalSave" type="button">贴上去 ↗</button>
+    </div>
+  </div>
+</div>
+
 <script>
 // ============================================================
 // 股票日记 · v1 · SPA
@@ -684,15 +784,19 @@ function maybeSeedDemo(){
     ticker: "NVDA", name: "NVIDIA Corporation", exchange: "NMS", currency: "USD",
     _demo: true,
     entries: [
-      { id: uid(), date: dStr(45), time: "10:32", price: 142.5, currency: "USD", type: "buy",
+      // THESIS · 一次基线评估
+      { id: uid(), date: dStr(45), time: "10:32", price: 142.5, currency: "USD", type: "buy", kind: "thesis",
         memo: "Blackwell 量产 + Hyperscaler 订单 4Q 满载 · 25x 估值还在合理区间 · 拿到下个财季验证。",
         answers: ["A","A","A","A","B","A","A"], score: 19, state: "清醒" },
-      { id: uid(), date: dStr(18), time: "21:14", price: 168.9, currency: "USD", type: "add",
-        memo: "财报超预期但盘后跌 · 自己有点想加 · 先冷静一下 · 这是事实还是叙事？",
-        answers: ["A","B","B","B","C","B","C"], score: 13, state: "漂移" },
-      { id: uid(), date: dStr(3),  time: "08:47", price: 295.2, currency: "USD", type: "review",
-        memo: "最近一直在刷价格 · 不舒服 · 但事实没变 · 写下来提醒自己 · 别在恐惧里做决定。",
-        answers: ["B","B","B","C","C","B","C"], score: 9, state: "干扰" },
+      // NOTES · 之后的便条 (累积)
+      { id: uid(), date: dStr(38), time: "09:15", price: 158.4, currency: "USD", type: "add", kind: "note",
+        quantity: 30, memo: "财报前一天小幅加仓 30 股 · 预期管理符合 · 估值还便宜。" },
+      { id: uid(), date: dStr(18), time: "21:14", price: 168.9, currency: "USD", type: "review", kind: "note",
+        memo: "财报超预期但盘后跌 · 自己有点想加 · 先冷静 · 这是事实还是叙事?" },
+      { id: uid(), date: dStr(10), time: "11:08", price: 220.0, currency: "USD", type: "trim", kind: "note",
+        quantity: 50, memo: "兑现一半 · 不贪 · 留下半仓看长。" },
+      { id: uid(), date: dStr(3),  time: "08:47", price: 295.2, currency: "USD", type: "review", kind: "note",
+        memo: "最近一直在刷价格 · 不舒服 · 但事实没变 · 写下来提醒自己 · 别在恐惧里做决定。" }
     ]
   };
   save(d);
@@ -1096,10 +1200,12 @@ async function renderBook(tk){
   const b = d.books[tk];
   const view = document.getElementById("view-book");
   if(!b){ view.innerHTML = `<a class="btn" href="#/" style="margin:18px 0">← 全部日记本</a><div class="empty"><b>找不到日记本</b>${escapeHtml(tk)} 还没有任何篇目。</div>`; return; }
-  // ensure layout reset (in case prior empty state replaced innerHTML)
   view.innerHTML = `
-    <a class="btn" href="#/" style="margin:18px 0">← 全部日记本</a>
-    <a class="btn primary" href="#/new" style="margin:18px 0 18px 8px" id="addToBook">+ 这只股票 · 加一篇</a>
+    <div class="bk-actions">
+      <a class="btn" href="#/" style="margin:18px 0">← 全部</a>
+      <button class="btn primary" id="btnAddNote" type="button" style="margin:18px 0">+ 贴便条</button>
+      <a class="btn" href="#/new" id="btnRedoThesis" style="margin:18px 0">↻ 重做 thesis</a>
+    </div>
     <div class="bk-hero">
       <div class="bk-row">
         <span class="bk-tk" id="bkTk">—</span>
@@ -1113,7 +1219,20 @@ async function renderBook(tk){
     </div>
     <div class="book-stats" id="bkStats" style="display:none"></div>
     <div id="bkSummaryWrap"></div>
+
+    <div class="bk-section-h">
+      <span>◆ THESIS · 基线判断 <em>· 7 题深度评估 · 半年一回</em></span>
+      <span class="h-count" id="thesisCount"></span>
+    </div>
     <div class="entries" id="bkEntries"></div>
+
+    <div class="bk-section-h">
+      <span>▣ NOTES · 便条框 <em>· 操作 + 一句话 · 累积</em></span>
+      <span class="h-count" id="notesCount"></span>
+    </div>
+    <div class="notes-box">
+      <div class="notes-stack" id="bkNotes"></div>
+    </div>
   `;
   document.getElementById("bkTk").textContent = tk;
   document.getElementById("bkMeta").textContent = b.exchange || "";
@@ -1141,10 +1260,21 @@ async function renderBook(tk){
     document.getElementById("bkPrice").innerHTML = `<span style="font-family:var(--mono);font-size:10px;color:var(--mut);letter-spacing:.18em">实时价 ·</span> <em style="color:var(--mut)">暂不可用</em>`;
   }
 
-  // render entries (now livePrice known)
-  const rev = entries.slice().reverse();
-  document.getElementById("bkEntries").innerHTML = rev.map(e => entryHtml(e, tk, livePrice)).join("");
+  // split by kind · old entries default to thesis
+  const theses = entries.filter(e => (e.kind || "thesis") === "thesis").slice().reverse();
+  const notes  = entries.filter(e => e.kind === "note").slice().reverse();
+  document.getElementById("thesisCount").textContent = `${theses.length} 张`;
+  document.getElementById("notesCount").textContent  = `${notes.length} 张`;
+  document.getElementById("bkEntries").innerHTML = theses.length
+    ? theses.map(e => entryHtml(e, tk, livePrice)).join("")
+    : `<div class="empty"><b>还没有 thesis</b>点 ↻ 重做 thesis · 做一次完整的 7 题深度评估作为基线判断。</div>`;
+  document.getElementById("bkNotes").innerHTML = notes.length
+    ? notes.map(e => noteCardHtml(e, tk, livePrice)).join("")
+    : `<div class="notes-empty">▣ 暂无便条 · 点 + 贴便条 · 30 秒贴一张</div>`;
   bindEntryActions(tk);
+  bindNoteActions(tk);
+  // wire add-note button to open modal
+  document.getElementById("btnAddNote").addEventListener("click", () => openNoteModal(tk, b, livePrice, liveCurrency));
 
   // book-level pnl + earliest entry as anchor
   if(livePrice != null && entries.length){
@@ -1284,6 +1414,101 @@ function bindEntryActions(tk){
     });
   });
 }
+
+// ─── 便条 NOTE rendering + handlers ───
+function noteCardHtml(e, tk, livePrice){
+  const type = e.type || "review";
+  const tdef = ENTRY_TYPES[type] || ENTRY_TYPES.review;
+  const dParts = (e.date || "").split("-");
+  const d = dParts.length === 3 ? `${dParts[1]}·${dParts[2]}` : escapeHtml(e.date || "");
+  let pnlHtml = "";
+  if(livePrice != null && e.price != null){
+    const pnl = +(((livePrice - e.price) / e.price) * 100).toFixed(2);
+    const cls = pnl > 0 ? "up" : pnl < 0 ? "dn" : "";
+    const sign = pnl > 0 ? "+" : "";
+    pnlHtml = `<span class="note-card-pnl ${cls}">${sign}${pnl}% 距今</span>`;
+  }
+  const qty = e.quantity ? `<span class="note-card-qty"><b>${escapeHtml(String(e.quantity))}</b> 股</span>` : "";
+  const price = e.price ? `<span class="note-card-qty">@ <b>${formatPrice(e.price)}</b>${e.currency ? " "+escapeHtml(e.currency) : ""}</span>` : "";
+  return `
+    <div class="note-card t-${type}">
+      <div class="note-card-row">
+        <span class="note-card-date">${d}</span>
+        ${e.time ? `<span style="color:var(--mut);font-family:var(--mono);font-size:9.5px">${escapeHtml(e.time)}</span>` : ""}
+        <span class="note-card-type t-${type}">${tdef.en}</span>
+        ${qty}
+        ${price}
+      </div>
+      <p class="note-card-memo">${escapeHtml(e.memo || "—")}</p>
+      <div class="note-card-foot">
+        <span>${pnlHtml}</span>
+        <button class="note-card-del" data-note-del="${e.id}">删</button>
+      </div>
+    </div>
+  `;
+}
+function bindNoteActions(tk){
+  document.querySelectorAll("[data-note-del]").forEach(btn=>{
+    btn.addEventListener("click",()=>{
+      if(!confirm("删除这张便条？")) return;
+      const id = btn.dataset.noteDel;
+      const d = load();
+      d.books[tk].entries = (d.books[tk].entries||[]).filter(e=>e.id!==id);
+      save(d);
+      renderBook(tk);
+    });
+  });
+}
+
+// ─── 便条 modal · open / save / cancel ───
+let NOTE_CTX = null;
+function openNoteModal(tk, book, livePrice, liveCurrency){
+  NOTE_CTX = { tk, book, livePrice, liveCurrency };
+  document.getElementById("noteModalTk").textContent = " · " + tk;
+  document.getElementById("noteQty").value = "";
+  document.getElementById("notePrice").value = livePrice != null ? String(livePrice) : "";
+  document.getElementById("noteMemo").value = "";
+  document.querySelectorAll("#noteTypes .note-type-btn").forEach(b => b.classList.toggle("on", b.dataset.t === "add"));
+  document.getElementById("noteModal").classList.add("show");
+  setTimeout(()=> document.getElementById("noteMemo").focus(), 50);
+}
+function closeNoteModal(){
+  document.getElementById("noteModal").classList.remove("show");
+  NOTE_CTX = null;
+}
+function saveNote(){
+  if(!NOTE_CTX) return;
+  const { tk, livePrice, liveCurrency } = NOTE_CTX;
+  const type = document.querySelector("#noteTypes .note-type-btn.on")?.dataset.t || "add";
+  const qty = parseFloat(document.getElementById("noteQty").value);
+  const price = parseFloat(document.getElementById("notePrice").value);
+  const memo = document.getElementById("noteMemo").value.trim();
+  if(!memo){ alert("写一句话再贴"); return; }
+  const d = load();
+  if(!d.books[tk]) return;
+  d.books[tk].entries.push({
+    id: uid(),
+    date: new Date().toISOString().slice(0,10),
+    time: new Date().toTimeString().slice(0,5),
+    kind: "note",
+    type,
+    quantity: isNaN(qty) ? null : qty,
+    price: isNaN(price) ? livePrice : price,
+    currency: liveCurrency || d.books[tk].currency || null,
+    memo,
+  });
+  save(d);
+  closeNoteModal();
+  renderBook(tk);
+}
+document.getElementById("noteModalClose").addEventListener("click", closeNoteModal);
+document.getElementById("noteModalCancel").addEventListener("click", closeNoteModal);
+document.getElementById("noteModalSave").addEventListener("click", saveNote);
+document.getElementById("noteModal").addEventListener("click", (e)=>{ if(e.target.id === "noteModal") closeNoteModal(); });
+document.getElementById("noteTypes").addEventListener("click", (e)=>{
+  const btn = e.target.closest(".note-type-btn"); if(!btn) return;
+  document.querySelectorAll("#noteTypes .note-type-btn").forEach(x => x.classList.toggle("on", x === btn));
+});
 
 // ============================================================
 // SEARCH
