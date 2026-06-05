@@ -959,15 +959,17 @@ document.getElementById("manualName").addEventListener("input",()=>{
 document.getElementById("toStep2").addEventListener("click",()=> showStep(2));
 
 // step 2 · memo
-document.getElementById("memoText").addEventListener("input",(e)=>{
-  const v = e.target.value;
+function syncMemo(v){
   WIZ.memo = v;
   const c = document.getElementById("memoCount");
   c.textContent = `${v.length} / 140`;
   c.classList.toggle("warn", v.length > 120);
-  document.getElementById("toStep3").disabled = v.trim().length < 4;
+  document.getElementById("toStep3").disabled = v.trim().length < 2;
   persistDraft();
-});
+}
+document.getElementById("memoText").addEventListener("input",(e)=> syncMemo(e.target.value));
+document.getElementById("memoText").addEventListener("compositionend",(e)=> syncMemo(e.target.value));
+document.getElementById("memoText").addEventListener("blur",(e)=> syncMemo(e.target.value));
 document.getElementById("memoDate").addEventListener("change",(e)=>{ WIZ.date = e.target.value; persistDraft(); });
 document.getElementById("backStep1").addEventListener("click",()=> showStep(1));
 document.getElementById("toStep3").addEventListener("click",()=> showStep(3));
@@ -981,7 +983,7 @@ function renderQuestion(){
   document.getElementById("qBack").style.display = i > 0 ? "block" : "none";
   const cardHtml = `
     <div class="q-card show">
-      <div class="q-meta">Q ${String(i+1).padStart(2,"0")} / 05 · ${i === 4 ? "最后一题" : (i+1)+" 个问题"}</div>
+      <div class="q-meta">Q ${String(i+1).padStart(2,"0")} / ${String(QUESTIONS.length).padStart(2,"0")} · ${i === QUESTIONS.length - 1 ? "最后一题" : "还剩 "+(QUESTIONS.length-i-1)+" 题"}${q.short ? " · "+escapeHtml(q.short) : ""}</div>
       <div class="q-text">${escapeHtml(q.h)}</div>
       <div class="q-opts">
         ${["A","B","C","D"].map((L,idx)=>`
