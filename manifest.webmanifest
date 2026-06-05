@@ -1,10 +1,10 @@
 {
   "name": "股票日记 · STOCK JOURNAL",
   "short_name": "股票日记",
-  "description": "5 题快选 + 一句话理由 · 把每一次买入的初衷封进时间胶囊",
+  "description": "7 题心境快照 + 一句话理由 · 把每一次买入的初衷封进时间胶囊",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#F2EAD5",
-  "theme_color": "#F2EAD5",
+  "background_color": "#0E1318",
+  "theme_color": "#0E1318",
   "icons": []
 }
