@@ -511,6 +511,25 @@ footer.foot a:hover{color:var(--gold-b)}
 .note-memo-wrap label{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.22em;color:var(--mut);text-transform:uppercase;margin-bottom:6px}
 .note-memo-wrap textarea{width:100%;background:transparent;border:none;border-left:2px solid var(--acc);border-radius:0 8px 8px 0;padding:8px 0 8px 14px;color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.65;outline:none;resize:vertical;min-height:64px}
 .note-modal-foot{display:flex;justify-content:flex-end;gap:10px}
+
+/* ─── 便条优先级 chips + 卡上符号 ─── */
+.note-prio{display:flex;gap:0;margin:-8px 0 18px;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.note-prio-btn{flex:1;padding:8px 4px;background:transparent;border:none;border-right:1px solid var(--line);font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--mut);font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:background .12s,color .12s}
+.note-prio-btn:last-child{border-right:none}
+.note-prio-btn .np-sym{font-family:var(--mono);font-size:14px;line-height:1}
+.note-prio-btn[data-p="high"]   .np-sym{color:var(--neg)}
+.note-prio-btn[data-p="normal"] .np-sym{color:var(--acc)}
+.note-prio-btn[data-p="casual"] .np-sym{color:var(--mut)}
+.note-prio-btn:hover{background:var(--acc-soft);color:var(--ink)}
+.note-prio-btn.on{background:rgba(255,225,92,.14);color:var(--ink)}
+.note-prio-btn.on[data-p="high"]{background:rgba(255,77,61,.14)}
+.note-prio-btn.on[data-p="casual"]{background:rgba(154,142,120,.12)}
+.note-card .np-flag{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:10px;letter-spacing:.14em;font-weight:700;text-transform:uppercase;padding:2px 8px;border:1px solid currentColor;border-radius:4px;margin-left:4px}
+.note-card .np-flag.p-high{color:var(--neg)}
+.note-card .np-flag.p-normal{color:var(--acc)}
+.note-card .np-flag.p-casual{color:var(--mut);opacity:.7}
+.note-card.p-high{box-shadow:0 0 0 1px rgba(255,77,61,.32)}
+.note-card.p-casual{opacity:.78}
 </style>
 </head>
 <body>
@@ -692,6 +711,11 @@ footer.foot a:hover{color:var(--gold-b)}
       <button class="note-type-btn" type="button" data-t="sell"><span>卖出</span><b>SELL</b></button>
       <button class="note-type-btn" type="button" data-t="review"><span>复盘</span><b>REVIEW</b></button>
     </div>
+    <div class="note-prio" id="notePrio">
+      <button class="note-prio-btn" type="button" data-p="high"><span class="np-sym">▲</span>重要</button>
+      <button class="note-prio-btn on" type="button" data-p="normal"><span class="np-sym">◇</span>一般</button>
+      <button class="note-prio-btn" type="button" data-p="casual"><span class="np-sym">·</span>随笔</button>
+    </div>
     <div class="note-qp">
       <div><label>数量 (股)</label><input id="noteQty" type="text" inputmode="decimal" placeholder="50"></div>
       <div><label>价格</label><input id="notePrice" type="text" inputmode="decimal" placeholder="拉实时 · 可改"></div>
@@ -805,13 +829,13 @@ function maybeSeedDemo(){
         memo: "Blackwell 量产 + Hyperscaler 订单 4Q 满载 · 25x 估值还在合理区间 · 拿到下个财季验证。",
         answers: ["A","A","A","A","B","A","A"], score: 19, state: "清醒" },
       // NOTES · 之后的便条 (累积)
-      { id: uid(), date: dStr(38), time: "09:15", price: 158.4, currency: "USD", type: "add", kind: "note",
+      { id: uid(), date: dStr(38), time: "09:15", price: 158.4, currency: "USD", type: "add", kind: "note", priority: "normal",
         quantity: 30, memo: "财报前一天小幅加仓 30 股 · 预期管理符合 · 估值还便宜。" },
-      { id: uid(), date: dStr(18), time: "21:14", price: 168.9, currency: "USD", type: "review", kind: "note",
+      { id: uid(), date: dStr(18), time: "21:14", price: 168.9, currency: "USD", type: "review", kind: "note", priority: "high",
         memo: "财报超预期但盘后跌 · 自己有点想加 · 先冷静 · 这是事实还是叙事?" },
-      { id: uid(), date: dStr(10), time: "11:08", price: 220.0, currency: "USD", type: "trim", kind: "note",
+      { id: uid(), date: dStr(10), time: "11:08", price: 220.0, currency: "USD", type: "trim", kind: "note", priority: "normal",
         quantity: 50, memo: "兑现一半 · 不贪 · 留下半仓看长。" },
-      { id: uid(), date: dStr(3),  time: "08:47", price: 295.2, currency: "USD", type: "review", kind: "note",
+      { id: uid(), date: dStr(3),  time: "08:47", price: 295.2, currency: "USD", type: "review", kind: "note", priority: "casual",
         memo: "最近一直在刷价格 · 不舒服 · 但事实没变 · 写下来提醒自己 · 别在恐惧里做决定。" }
     ]
   };
@@ -1259,98 +1283,111 @@ async function renderBook(tk){
     ? entries.map(e=>`<div class="tnode s-${e.state}" title="${escapeHtml(e.date+" · "+e.state+" · "+(e.score||0)+"/21")}">${e.state.slice(0,1)}</div>`).join("")
     : `<div class="bk-trend-lab" style="padding:12px 0">暂无心境记录</div>`;
 
-  let livePrice = null, liveCurrency = null;
-  try{
-    const r = await fetch(`/api/quote?ticker=${encodeURIComponent(tk)}`);
-    if(r.ok){
-      const j = await r.json();
-      if(j.price != null){
-        livePrice = j.price; liveCurrency = j.currency;
-        const chgClass = j.change > 0 ? "up" : j.change < 0 ? "dn" : "";
-        const chgSign = j.change > 0 ? "+" : "";
-        document.getElementById("bkPrice").innerHTML = `<span style="font-family:var(--mono);font-size:10px;color:var(--mut);letter-spacing:.18em">实时价 ·</span> <b>${formatPrice(j.price)}</b> <em class="${chgClass}">${chgSign}${j.change ?? 0} (${chgSign}${j.changePct ?? 0}%)</em> <em style="color:var(--mut);font-family:var(--mono)">${escapeHtml(j.currency||"")}</em>`;
-      }
-    }
-  }catch(e){}
-  if(livePrice == null){
-    document.getElementById("bkPrice").innerHTML = `<span style="font-family:var(--mono);font-size:10px;color:var(--mut);letter-spacing:.18em">实时价 ·</span> <em style="color:var(--mut)">暂不可用</em>`;
-  }
-
-  // split by kind · old entries default to thesis
+  // split + render entries FIRST · don't block on network
   const theses = entries.filter(e => (e.kind || "thesis") === "thesis").slice().reverse();
   const notes  = entries.filter(e => e.kind === "note").slice().reverse();
   document.getElementById("thesisCount").textContent = `${theses.length} 张`;
   document.getElementById("notesCount").textContent  = `${notes.length} 张`;
   document.getElementById("bkEntries").innerHTML = theses.length
-    ? theses.map(e => entryHtml(e, tk, livePrice)).join("")
+    ? theses.map(e => entryHtml(e, tk, null)).join("")
     : `<div class="empty"><b>还没有 thesis</b>点 ↻ 重做 thesis · 做一次完整的 7 题深度评估作为基线判断。</div>`;
   document.getElementById("bkNotes").innerHTML = notes.length
-    ? notes.map(e => noteCardHtml(e, tk, livePrice)).join("")
+    ? notes.map(e => noteCardHtml(e, tk, null)).join("")
     : `<div class="notes-empty">▣ 暂无便条 · 点 + 贴便条 · 30 秒贴一张</div>`;
   bindEntryActions(tk);
   bindNoteActions(tk);
-  // wire add-note button to open modal
-  document.getElementById("btnAddNote").addEventListener("click", () => openNoteModal(tk, b, livePrice, liveCurrency));
 
-  // book-level pnl + earliest entry as anchor
-  if(livePrice != null && entries.length){
-    const first = entries[0];
-    if(first.price != null){
-      const pnl = +(((livePrice - first.price) / first.price) * 100).toFixed(2);
-      const cls = pnl > 0 ? "up" : pnl < 0 ? "dn" : "flat";
-      const sign = pnl > 0 ? "+" : "";
-      const cellHtml = `
-        <div class="bs-cell">首篇买入价<b>${formatPrice(first.price)}</b></div>
-        <div class="bs-cell">当前价<b class="${cls === 'up' ? 'up' : cls === 'dn' ? 'dn' : ''}">${formatPrice(livePrice)}</b></div>
-        <div class="bs-cell">距首篇<b class="${cls === 'up' ? 'up' : cls === 'dn' ? 'dn' : ''}">${sign}${pnl}%</b></div>
-        <div class="bs-cell">本本篇数<b>${entries.length} 篇</b></div>
-      `;
+  let livePrice = null, liveCurrency = null;
+  // wire add-note · uses current livePrice via closure-updated CTX
+  let _btnAdd = document.getElementById("btnAddNote");
+  _btnAdd.addEventListener("click", () => openNoteModal(tk, b, livePrice, liveCurrency));
+
+  // fetch quote in background · 5s timeout · update PnL when arrives
+  (async () => {
+    try{
+      const ctrl = new AbortController();
+      const to = setTimeout(()=> ctrl.abort(), 5000);
+      const r = await fetch(`/api/quote?ticker=${encodeURIComponent(tk)}`, { signal: ctrl.signal });
+      clearTimeout(to);
+      if(!r.ok) throw new Error("quote " + r.status);
+      const j = await r.json();
+      if(j.price == null) throw new Error("no price");
+      livePrice = j.price; liveCurrency = j.currency;
+      const chgClass = j.change > 0 ? "up" : j.change < 0 ? "dn" : "";
+      const chgSign = j.change > 0 ? "+" : "";
+      const bp = document.getElementById("bkPrice");
+      if(bp) bp.innerHTML = `<span style="font-family:var(--mono);font-size:10px;color:var(--mut);letter-spacing:.18em">实时价 ·</span> <b>${formatPrice(j.price)}</b> <em class="${chgClass}">${chgSign}${j.change ?? 0} (${chgSign}${j.changePct ?? 0}%)</em> <em style="color:var(--mut);font-family:var(--mono)">${escapeHtml(j.currency||"")}</em>`;
+      // re-render entries WITH livePrice (PnL now visible)
+      const be = document.getElementById("bkEntries");
+      if(be && theses.length) be.innerHTML = theses.map(e => entryHtml(e, tk, livePrice)).join("");
+      const bn = document.getElementById("bkNotes");
+      if(bn && notes.length)  bn.innerHTML = notes.map(e => noteCardHtml(e, tk, livePrice)).join("");
+      bindEntryActions(tk); bindNoteActions(tk);
+      // book-stats now (anchor = earliest thesis)
+      const anchor = entries.find(e => (e.kind || "thesis") === "thesis") || entries[0];
+      if(anchor && anchor.price != null){
+        const pnl = +(((livePrice - anchor.price) / anchor.price) * 100).toFixed(2);
+        const cls = pnl > 0 ? "up" : pnl < 0 ? "dn" : "flat";
+        const sign = pnl > 0 ? "+" : "";
+        const stats = document.getElementById("bkStats");
+        stats.innerHTML = `
+          <div class="bs-cell">首篇买入价<b>${formatPrice(anchor.price)}</b></div>
+          <div class="bs-cell">当前价<b class="${cls === 'up' ? 'up' : cls === 'dn' ? 'dn' : ''}">${formatPrice(livePrice)}</b></div>
+          <div class="bs-cell">距首篇<b class="${cls === 'up' ? 'up' : cls === 'dn' ? 'dn' : ''}">${sign}${pnl}%</b></div>
+          <div class="bs-cell">本本篇数<b>${entries.length} 张</b></div>
+        `;
+        stats.style.display = "grid";
+      }
+    }catch(e){
+      const bp = document.getElementById("bkPrice");
+      if(bp) bp.innerHTML = `<span style="font-family:var(--mono);font-size:10px;color:var(--mut);letter-spacing:.18em">实时价 ·</span> <em style="color:var(--mut)">暂不可用</em>`;
+    }
+  })();
+
+  // profile fetch · 5s timeout · won't block render
+  (async () => {
+    try{
+      const ctrl = new AbortController();
+      const to = setTimeout(()=> ctrl.abort(), 5000);
+      const r = await fetch(`/api/profile?ticker=${encodeURIComponent(tk)}`, { signal: ctrl.signal });
+      clearTimeout(to);
+      if(!r.ok) return;
+      const j = await r.json();
+      const sectorHtml = [];
+      if(j.sector) sectorHtml.push(`<span>板块 · ${escapeHtml(j.sector)}</span>`);
+      if(j.industry) sectorHtml.push(`<span>行业 · ${escapeHtml(j.industry)}</span>`);
+      if(j.country) sectorHtml.push(`<span>地区 · ${escapeHtml(j.country)}</span>`);
+      const secEl = document.getElementById("bkSector");
+      if(secEl) secEl.innerHTML = sectorHtml.join("");
       const stats = document.getElementById("bkStats");
-      stats.innerHTML = cellHtml;
-      stats.style.display = "grid";
-    }
-  }
-
-  // fetch + render profile (sector / industry / pe / 52w / market cap / summary)
-  try{
-    const r = await fetch(`/api/profile?ticker=${encodeURIComponent(tk)}`);
-    if(!r.ok) return;
-    const j = await r.json();
-    const sectorHtml = [];
-    if(j.sector) sectorHtml.push(`<span>板块 · ${escapeHtml(j.sector)}</span>`);
-    if(j.industry) sectorHtml.push(`<span>行业 · ${escapeHtml(j.industry)}</span>`);
-    if(j.country) sectorHtml.push(`<span>地区 · ${escapeHtml(j.country)}</span>`);
-    document.getElementById("bkSector").innerHTML = sectorHtml.join("");
-
-    // extend stats grid (append cells)
-    const stats = document.getElementById("bkStats");
-    const extra = [];
-    if(j.marketCap != null) extra.push(`<div class="bs-cell">市值<b>${formatMarketCap(j.marketCap, j.currency)}</b></div>`);
-    if(j.pe != null) extra.push(`<div class="bs-cell">P/E (TTM)<b>${j.pe.toFixed(2)}</b></div>`);
-    if(j.forwardPE != null) extra.push(`<div class="bs-cell">Fwd P/E<b>${j.forwardPE.toFixed(2)}</b></div>`);
-    if(j.w52high != null && j.w52low != null) extra.push(`<div class="bs-cell">52w 区间<b>${formatPrice(j.w52low)} — ${formatPrice(j.w52high)}</b></div>`);
-    if(j.w52pos != null) extra.push(`<div class="bs-cell">52w 位置<b>${j.w52pos}%</b></div>`);
-    if(j.dividendYield != null) extra.push(`<div class="bs-cell">股息率<b>${(j.dividendYield*100).toFixed(2)}%</b></div>`);
-    if(extra.length){
-      stats.innerHTML += extra.join("");
-      stats.style.display = "grid";
-    }
-
-    // business summary (collapsed)
-    if(j.summary){
-      const wrap = document.getElementById("bkSummaryWrap");
-      wrap.innerHTML = `
-        <div class="bs-cell" style="border:0;padding:18px 0 0;color:var(--gold)">业务简介 · BUSINESS</div>
-        <div class="bk-summary" id="bkSummary">${escapeHtml(j.summary)}</div>
-        <button class="bk-summary-toggle" id="bkSummaryToggle">▾ 展开 ·</button>
-      `;
-      document.getElementById("bkSummaryToggle").addEventListener("click",(e)=>{
-        const s = document.getElementById("bkSummary");
-        s.classList.toggle("expand");
-        e.target.textContent = s.classList.contains("expand") ? "▴ 收起" : "▾ 展开 ·";
-      });
-    }
-  }catch(e){}
+      const extra = [];
+      if(j.marketCap != null) extra.push(`<div class="bs-cell">市值<b>${formatMarketCap(j.marketCap, j.currency)}</b></div>`);
+      if(j.pe != null) extra.push(`<div class="bs-cell">P/E (TTM)<b>${j.pe.toFixed(2)}</b></div>`);
+      if(j.forwardPE != null) extra.push(`<div class="bs-cell">Fwd P/E<b>${j.forwardPE.toFixed(2)}</b></div>`);
+      if(j.w52high != null && j.w52low != null) extra.push(`<div class="bs-cell">52w 区间<b>${formatPrice(j.w52low)} — ${formatPrice(j.w52high)}</b></div>`);
+      if(j.w52pos != null) extra.push(`<div class="bs-cell">52w 位置<b>${j.w52pos}%</b></div>`);
+      if(j.dividendYield != null) extra.push(`<div class="bs-cell">股息率<b>${(j.dividendYield*100).toFixed(2)}%</b></div>`);
+      if(stats && extra.length){
+        stats.innerHTML += extra.join("");
+        stats.style.display = "grid";
+      }
+      if(j.summary){
+        const wrap = document.getElementById("bkSummaryWrap");
+        if(wrap){
+          wrap.innerHTML = `
+            <div class="bs-cell" style="border:0;padding:18px 0 0;color:var(--acc)">业务简介 · BUSINESS</div>
+            <div class="bk-summary" id="bkSummary">${escapeHtml(j.summary)}</div>
+            <button class="bk-summary-toggle" id="bkSummaryToggle">▾ 展开 ·</button>
+          `;
+          document.getElementById("bkSummaryToggle").addEventListener("click",(e)=>{
+            const s = document.getElementById("bkSummary");
+            s.classList.toggle("expand");
+            e.target.textContent = s.classList.contains("expand") ? "▴ 收起" : "▾ 展开 ·";
+          });
+        }
+      }
+    }catch(e){}
+  })();
 }
 function formatMarketCap(v, ccy){
   if(v == null) return "—";
@@ -1432,9 +1469,16 @@ function bindEntryActions(tk){
 }
 
 // ─── 便条 NOTE rendering + handlers ───
+const PRIO_DEF = {
+  high:   { sym:"▲", label:"重要" },
+  normal: { sym:"◇", label:"一般" },
+  casual: { sym:"·", label:"随笔" },
+};
 function noteCardHtml(e, tk, livePrice){
   const type = e.type || "review";
   const tdef = ENTRY_TYPES[type] || ENTRY_TYPES.review;
+  const prio = e.priority || "normal";
+  const pdef = PRIO_DEF[prio] || PRIO_DEF.normal;
   const dParts = (e.date || "").split("-");
   const d = dParts.length === 3 ? `${dParts[1]}·${dParts[2]}` : escapeHtml(e.date || "");
   let pnlHtml = "";
@@ -1447,11 +1491,12 @@ function noteCardHtml(e, tk, livePrice){
   const qty = e.quantity ? `<span class="note-card-qty"><b>${escapeHtml(String(e.quantity))}</b> 股</span>` : "";
   const price = e.price ? `<span class="note-card-qty">@ <b>${formatPrice(e.price)}</b>${e.currency ? " "+escapeHtml(e.currency) : ""}</span>` : "";
   return `
-    <div class="note-card t-${type}">
+    <div class="note-card t-${type} p-${prio}">
       <div class="note-card-row">
         <span class="note-card-date">${d}</span>
         ${e.time ? `<span style="color:var(--mut);font-family:var(--mono);font-size:9.5px">${escapeHtml(e.time)}</span>` : ""}
         <span class="note-card-type t-${type}">${tdef.en}</span>
+        <span class="np-flag p-${prio}">${pdef.sym} ${pdef.label}</span>
         ${qty}
         ${price}
       </div>
@@ -1485,6 +1530,7 @@ function openNoteModal(tk, book, livePrice, liveCurrency){
   document.getElementById("notePrice").value = livePrice != null ? String(livePrice) : "";
   document.getElementById("noteMemo").value = "";
   document.querySelectorAll("#noteTypes .note-type-btn").forEach(b => b.classList.toggle("on", b.dataset.t === "add"));
+  document.querySelectorAll("#notePrio .note-prio-btn").forEach(b => b.classList.toggle("on", b.dataset.p === "normal"));
   document.getElementById("noteModal").classList.add("show");
   setTimeout(()=> document.getElementById("noteMemo").focus(), 50);
 }
@@ -1496,18 +1542,20 @@ function saveNote(){
   if(!NOTE_CTX) return;
   const { tk, livePrice, liveCurrency } = NOTE_CTX;
   const type = document.querySelector("#noteTypes .note-type-btn.on")?.dataset.t || "add";
+  const priority = document.querySelector("#notePrio .note-prio-btn.on")?.dataset.p || "normal";
   const qty = parseFloat(document.getElementById("noteQty").value);
   const price = parseFloat(document.getElementById("notePrice").value);
   const memo = document.getElementById("noteMemo").value.trim();
   if(!memo){ alert("写一句话再贴"); return; }
   const d = load();
-  if(!d.books[tk]) return;
+  if(!d.books[tk]){ closeNoteModal(); return; }
   d.books[tk].entries.push({
     id: uid(),
     date: new Date().toISOString().slice(0,10),
     time: new Date().toTimeString().slice(0,5),
     kind: "note",
     type,
+    priority,
     quantity: isNaN(qty) ? null : qty,
     price: isNaN(price) ? livePrice : price,
     currency: liveCurrency || d.books[tk].currency || null,
@@ -1524,6 +1572,10 @@ document.getElementById("noteModal").addEventListener("click", (e)=>{ if(e.targe
 document.getElementById("noteTypes").addEventListener("click", (e)=>{
   const btn = e.target.closest(".note-type-btn"); if(!btn) return;
   document.querySelectorAll("#noteTypes .note-type-btn").forEach(x => x.classList.toggle("on", x === btn));
+});
+document.getElementById("notePrio").addEventListener("click", (e)=>{
+  const btn = e.target.closest(".note-prio-btn"); if(!btn) return;
+  document.querySelectorAll("#notePrio .note-prio-btn").forEach(x => x.classList.toggle("on", x === btn));
 });
 
 // ============================================================
