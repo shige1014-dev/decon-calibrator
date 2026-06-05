@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>股票日记 · STOCK JOURNAL · 心境快照</title>
-<meta name="description" content="情绪化会改写认知 · 5 题快选 + 一句话理由 · 把每一次买入的初衷封进时间胶囊">
+<meta name="description" content="情绪化会改写认知 · 7 题心境快照 + 一句话理由 · 把每一次买入的初衷封进时间胶囊">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;700;900&family=Playfair+Display:ital,wght@1,400;1,700&display=swap" rel="stylesheet">
@@ -14,57 +14,59 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="股票日记">
 <script>try{
-  // v2 palette migration · 老 'dark' 值忽略一次 · 强制 paper 重启认知
-  var migrated = localStorage.getItem('journal_palette_v2');
+  // v3 palette migration · 之前 paper/dark 都重置成 lime 一次
+  var v3 = localStorage.getItem('journal_palette_v3');
   var t = localStorage.getItem('journal_theme');
-  if(!migrated){ t = 'paper'; localStorage.setItem('journal_theme','paper'); localStorage.setItem('journal_palette_v2','1'); }
-  document.documentElement.setAttribute('data-theme', t || 'paper');
+  if(!v3){ t = 'lime'; localStorage.setItem('journal_theme','lime'); localStorage.setItem('journal_palette_v3','1'); }
+  document.documentElement.setAttribute('data-theme', t || 'lime');
 }catch(e){}</script>
 <style>
-/* ─── 老纸日记本 palette · default paper · dark = 夜灯 lamp ─── */
-:root, [data-theme="paper"]{
-  --bg:#F2EAD5; --bg2:#EBE0C2; --bg3:#E4D5A8; --bg4:#DBC998;
-  --panel:#EBE0C2;
-  --line:rgba(42,32,24,.18);
-  --cyan:#3F6280; --cyan-b:#2A4868;
-  --gold:#8A6B16; --gold-b:#5C4310;
-  --ink:#2A2018; --ink-2:#4A3D2E; --mut:#7A6852; --tf:#A89878;
-  --ok:#5C7B3F; --warn:#B88543; --neg:#B8412D; --pend:#9A8E78;
-  --st-clear:#5C7B3F; --st-drift:#B88543; --st-noise:#A85A30; --st-chaos:#B8412D;
+/* ─── lime · 深墨绿 + 荧光酸绿 · default 主题 ─── */
+:root, [data-theme="lime"]{
+  --bg:#0A1410; --bg2:#0F1C16; --bg3:#152821; --bg4:#1D3429;
+  --panel:#0F1C16;
+  --line:rgba(180,255,58,.18);
+  --acc:#B4FF3A; --acc-b:#5CFF7A; --acc-soft:rgba(180,255,58,.10);
+  --gold:#B4FF3A; --gold-b:#5CFF7A;  /* alias · old css refs */
+  --cyan:#5CC8E8; --cyan-b:#8AD8F0;
+  --ink:#E8F2EC; --ink-2:#C2D0C6; --mut:#8AA398; --tf:#4A6056;
+  --ok:#B4FF3A; --warn:#FFE15C; --neg:#FF4D3D; --pend:#6A8076;
+  --st-clear:#B4FF3A; --st-drift:#FFE15C; --st-noise:#FFA53A; --st-chaos:#FF4D3D;
   --mono:'JetBrains Mono',ui-monospace,Menlo,monospace;
   --sans:'Noto Sans SC','Inter',-apple-system,sans-serif;
   --serif:'Noto Serif SC','Iowan Old Style','Songti SC',serif;
 }
-[data-theme="dark"]{
-  --bg:#1A1612; --bg2:#241E18; --bg3:#2E2620; --bg4:#3A3026;
-  --panel:#241E18; --line:rgba(232,220,192,.18);
-  --cyan:#7BA5C8; --cyan-b:#A8C5DE;
-  --gold:#C8A865; --gold-b:#E8C988;
-  --ink:#E8DCC0; --ink-2:#D2C5A6; --mut:#9A8E78; --tf:#5A4E3C;
-  --ok:#8BAE5F; --warn:#E0B575; --neg:#D26A5A; --pend:#8A7C68;
-  --st-clear:#8BAE5F; --st-drift:#E0B575; --st-noise:#D89A5C; --st-chaos:#D26A5A;
+[data-theme="paper"]{
+  --bg:#F2EAD5; --bg2:#EBE0C2; --bg3:#E4D5A8; --bg4:#DBC998;
+  --panel:#EBE0C2; --line:rgba(42,32,24,.18);
+  --acc:#8A6B16; --acc-b:#5C4310; --acc-soft:rgba(180,255,58,.10);
+  --gold:#8A6B16; --gold-b:#5C4310;
+  --cyan:#3F6280; --cyan-b:#2A4868;
+  --ink:#2A2018; --ink-2:#4A3D2E; --mut:#7A6852; --tf:#A89878;
+  --ok:#5C7B3F; --warn:#B88543; --neg:#B8412D; --pend:#9A8E78;
+  --st-clear:#5C7B3F; --st-drift:#B88543; --st-noise:#A85A30; --st-chaos:#B8412D;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-::selection{background:rgba(138,107,22,.24);color:#2A2018}
-[data-theme="dark"] ::selection{background:rgba(200,168,101,.32);color:#1A1612}
+::selection{background:rgba(180,255,58,.30);color:#0A1410}
+[data-theme="paper"] ::selection{background:rgba(180,255,58,.24);color:#2A2018}
 html{min-height:100vh;min-height:100dvh;background:var(--bg)}
 body{
   background:
-    radial-gradient(1100px 520px at 50% -8%, rgba(138,107,22,.06), transparent 65%),
-    radial-gradient(800px 400px at 18% 92%, rgba(184,65,45,.04), transparent 60%),
+    radial-gradient(1100px 520px at 50% -8%, rgba(180,255,58,.10), transparent 65%),
+    radial-gradient(800px 400px at 18% 92%, rgba(92,200,232,.05), transparent 60%),
     var(--bg);
   color:var(--ink);font-family:var(--sans);line-height:1.6;min-height:100vh;min-height:100dvh
 }
-[data-theme="dark"] body{
+[data-theme="paper"] body{
   background:
-    radial-gradient(1100px 520px at 50% -8%, rgba(200,168,101,.08), transparent 65%),
-    radial-gradient(800px 400px at 18% 92%, rgba(123,165,200,.04), transparent 60%),
+    radial-gradient(1100px 520px at 50% -8%, rgba(180,255,58,.06), transparent 65%),
+    radial-gradient(800px 400px at 18% 92%, rgba(184,65,45,.04), transparent 60%),
     var(--bg)
 }
 
 /* topbar */
-.topbar{display:flex;align-items:center;gap:16px;padding:14px 22px;border-bottom:1px solid var(--line);background:rgba(242,234,213,.88);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);position:sticky;top:0;z-index:10}
-[data-theme="dark"] .topbar{background:rgba(26,22,18,.85)}
+.topbar{display:flex;align-items:center;gap:16px;padding:14px 22px;border-bottom:1px solid var(--line);background:rgba(10,20,16,.85);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);position:sticky;top:0;z-index:10}
+[data-theme="paper"] .topbar{background:rgba(242,234,213,.88)}
 .brand{font-family:var(--mono);letter-spacing:.12em;font-size:15px;color:var(--ink);text-decoration:none;flex:none}
 .brand b{color:var(--gold-b)} .brand .mk{color:var(--gold)}
 .tb-search{flex:1;max-width:380px;display:flex;align-items:center;gap:8px;padding:6px 12px;border:1px solid var(--line);background:transparent;border-radius:6px}
@@ -76,8 +78,8 @@ body{
 .theme-btn:hover{border-color:var(--gold);color:var(--gold-b)}
 .theme-btn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.6}
 .ico-sun{display:none}
-[data-theme="dark"] .ico-moon{display:none}
-[data-theme="dark"] .ico-sun{display:block}
+[data-theme="paper"] .ico-moon{display:none}
+[data-theme="paper"] .ico-sun{display:block}
 
 /* layout */
 .wrap{max-width:920px;margin:0 auto;padding:0 24px 80px}
@@ -95,8 +97,8 @@ body{
 .cta-row{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
 .btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;padding:12px 22px;background:transparent;border:1px solid var(--line);color:var(--mut);cursor:pointer;text-decoration:none;font-weight:600;transition:border-color .15s,color .15s,background .15s}
 .btn:hover{border-color:var(--gold);color:var(--gold-b)}
-.btn.primary{border-color:var(--gold);color:var(--gold);background:rgba(138,107,22,.06)}
-.btn.primary:hover{background:rgba(138,107,22,.12);color:var(--gold-b)}
+.btn.primary{border-color:var(--gold);color:var(--gold);background:rgba(180,255,58,.06)}
+.btn.primary:hover{background:rgba(180,255,58,.12);color:var(--gold-b)}
 .btn.big{padding:16px 28px;font-size:12.5px;letter-spacing:.2em}
 
 /* sec header */
@@ -107,7 +109,7 @@ body{
 /* book list */
 .books{border-top:1px solid var(--line)}
 .book-row{display:grid;grid-template-columns:64px 1fr auto auto auto;gap:18px;align-items:center;padding:18px 14px;border-bottom:1px solid var(--line);text-decoration:none;color:inherit;transition:padding-left .15s,background .15s}
-.book-row:hover{padding-left:24px;background:rgba(138,107,22,.04)}
+.book-row:hover{padding-left:24px;background:rgba(180,255,58,.04)}
 .br-tk{font-family:var(--mono);font-size:13.5px;font-weight:700;color:var(--gold);letter-spacing:.04em}
 .br-name{font-family:'Noto Serif SC',serif;font-size:14px;color:var(--ink);font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .br-name em{font-style:normal;color:var(--mut);font-size:12px;font-family:var(--sans);font-weight:400;margin-left:6px}
@@ -143,7 +145,7 @@ body{
 .tk-list{position:absolute;left:0;right:0;top:100%;background:var(--bg2);border:1px solid var(--gold);max-height:300px;overflow:auto;z-index:5;display:none}
 .tk-list.show{display:block}
 .tk-item{display:grid;grid-template-columns:90px 1fr auto;gap:12px;align-items:center;padding:10px 14px;border-bottom:1px solid var(--line);cursor:pointer;font-family:var(--mono);font-size:11px}
-.tk-item:hover{background:rgba(138,107,22,.08)}
+.tk-item:hover{background:rgba(180,255,58,.08)}
 .tk-item:last-child{border-bottom:none}
 .tk-item .ti-s{color:var(--gold);font-weight:700;letter-spacing:.04em}
 .tk-item .ti-n{color:var(--ink);font-family:var(--sans);font-size:12.5px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
@@ -169,8 +171,8 @@ body{
 .memo-count.warn{color:var(--neg)}
 .memo-date{display:flex;gap:18px;align-items:center;margin-top:24px;flex-wrap:wrap}
 .memo-date label{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--mut);text-transform:uppercase}
-.memo-date input{background:transparent;border:none;border-bottom:1px solid var(--line);color:var(--ink);font-family:var(--mono);font-size:13px;padding:4px 0;outline:none;color-scheme:light}
-[data-theme="dark"] .memo-date input{color-scheme:dark}
+.memo-date input{background:transparent;border:none;border-bottom:1px solid var(--line);color:var(--ink);font-family:var(--mono);font-size:13px;padding:4px 0;outline:none;color-scheme:dark}
+[data-theme="paper"] .memo-date input{color-scheme:light}
 .memo-date input:focus{border-bottom-color:var(--gold)}
 
 /* step 3 · questions card stack */
@@ -182,12 +184,12 @@ body{
 .q-text{font-family:'Noto Serif SC',serif;font-size:24px;font-weight:800;color:var(--ink);line-height:1.4;margin-bottom:28px;letter-spacing:-.005em}
 .q-opts{display:flex;flex-direction:column;gap:0;border-top:1px solid var(--line)}
 .q-opt{display:grid;grid-template-columns:40px 1fr;gap:18px;align-items:center;padding:18px 14px;border-bottom:1px solid var(--line);cursor:pointer;text-align:left;background:transparent;color:inherit;width:100%;font-family:inherit;border-left:none;border-right:none;border-top:none;transition:background .15s,padding-left .15s}
-.q-opt:hover{background:rgba(138,107,22,.06);padding-left:22px}
-.q-opt:focus{outline:none;background:rgba(138,107,22,.12)}
+.q-opt:hover{background:rgba(180,255,58,.06);padding-left:22px}
+.q-opt:focus{outline:none;background:rgba(180,255,58,.12)}
 .q-opt b{font-family:'Playfair Display',serif;font-style:italic;font-weight:700;font-size:24px;color:var(--mut);transition:color .15s,transform .15s;line-height:1}
 .q-opt:hover b{color:var(--gold);transform:scale(1.15)}
 .q-opt span{font-family:'Noto Serif SC',serif;font-size:15px;color:var(--ink-2);line-height:1.6}
-.q-opt.is-on{background:rgba(138,107,22,.14)}
+.q-opt.is-on{background:rgba(180,255,58,.14)}
 .q-opt.is-on b{color:var(--gold-b);transform:scale(1.15)}
 .q-back{margin-top:18px;font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--mut);background:transparent;border:none;cursor:pointer;text-transform:uppercase;padding:8px 0}
 .q-back:hover{color:var(--gold-b)}
@@ -220,14 +222,14 @@ body{
 .bk-trend{display:flex;gap:0;margin-bottom:10px;border-top:1px solid var(--line);padding-top:14px}
 .bk-trend .tnode{flex:1;height:32px;border-right:1px solid var(--line);display:grid;place-items:center;font-family:var(--mono);font-size:9px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;position:relative}
 .bk-trend .tnode:last-child{border-right:none}
-.bk-trend .tnode.s-清醒{color:var(--st-clear);background:rgba(92,123,63,.14)}
-.bk-trend .tnode.s-漂移{color:var(--st-drift);background:rgba(184,133,67,.14)}
-.bk-trend .tnode.s-干扰{color:var(--st-noise);background:rgba(168,90,48,.16)}
-.bk-trend .tnode.s-接管{color:var(--st-chaos);background:rgba(184,65,45,.18)}
-[data-theme="dark"] .bk-trend .tnode.s-清醒{background:rgba(139,174,95,.10)}
-[data-theme="dark"] .bk-trend .tnode.s-漂移{background:rgba(224,181,117,.10)}
-[data-theme="dark"] .bk-trend .tnode.s-干扰{background:rgba(216,154,92,.12)}
-[data-theme="dark"] .bk-trend .tnode.s-接管{background:rgba(210,106,90,.14)}
+.bk-trend .tnode.s-清醒{color:var(--st-clear);background:rgba(180,255,58,.10)}
+.bk-trend .tnode.s-漂移{color:var(--st-drift);background:rgba(255,225,92,.10)}
+.bk-trend .tnode.s-干扰{color:var(--st-noise);background:rgba(255,165,58,.12)}
+.bk-trend .tnode.s-接管{color:var(--st-chaos);background:rgba(255,77,61,.14)}
+[data-theme="paper"] .bk-trend .tnode.s-清醒{background:rgba(92,123,63,.14)}
+[data-theme="paper"] .bk-trend .tnode.s-漂移{background:rgba(184,133,67,.14)}
+[data-theme="paper"] .bk-trend .tnode.s-干扰{background:rgba(168,90,48,.16)}
+[data-theme="paper"] .bk-trend .tnode.s-接管{background:rgba(184,65,45,.18)}
 .bk-trend-lab{font-family:var(--mono);font-size:9px;letter-spacing:.22em;color:var(--mut);text-transform:uppercase;margin-bottom:6px;font-weight:600}
 
 /* entries timeline */
@@ -265,7 +267,7 @@ body{
 .sr-item-tk em{color:var(--mut);font-family:'Noto Serif SC',serif;font-style:normal;font-size:13px;margin-left:10px;font-weight:600}
 .sr-item-d{font-family:var(--mono);font-size:10.5px;color:var(--mut);letter-spacing:.06em}
 .sr-item-memo{font-family:'Noto Serif SC',serif;font-style:italic;color:var(--ink-2);font-size:14px;line-height:1.7;padding-left:14px;border-left:2px solid var(--line)}
-.sr-item-memo mark{background:rgba(138,107,22,.18);color:var(--gold-b);padding:0 2px}
+.sr-item-memo mark{background:rgba(180,255,58,.18);color:var(--gold-b);padding:0 2px}
 
 footer.foot{max-width:920px;margin:0 auto;padding:24px;border-top:1px solid var(--line);font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;color:var(--mut);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px}
 footer.foot a{color:var(--gold);text-decoration:none}
@@ -275,8 +277,8 @@ footer.foot a:hover{color:var(--gold-b)}
 .type-pick{display:grid;grid-template-columns:repeat(5,1fr);gap:0;border:1px solid var(--line);margin:0 0 22px}
 .type-chip{padding:10px 4px;text-align:center;cursor:pointer;background:transparent;border:none;border-right:1px solid var(--line);font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;color:var(--mut);font-weight:600;text-transform:uppercase;transition:background .12s,color .12s}
 .type-chip:last-child{border-right:none}
-.type-chip:hover{background:rgba(138,107,22,.06);color:var(--gold-b)}
-.type-chip.on{background:rgba(138,107,22,.14);color:var(--gold-b)}
+.type-chip:hover{background:rgba(180,255,58,.06);color:var(--gold-b)}
+.type-chip.on{background:rgba(180,255,58,.14);color:var(--gold-b)}
 .type-chip b{display:block;font-family:'Noto Serif SC',serif;font-style:normal;font-size:13px;font-weight:700;color:var(--ink);letter-spacing:0;margin-top:3px}
 .type-chip.on b{color:var(--gold-b)}
 @media(max-width:520px){.type-chip{padding:8px 2px;font-size:9px}.type-chip b{font-size:11px}}
@@ -309,22 +311,87 @@ footer.foot a:hover{color:var(--gold-b)}
 .settings-pop.show{display:block;animation:slideIn .2s ease}
 .sp-head{padding:12px 16px;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:10px;letter-spacing:.24em;color:var(--gold);font-weight:700;text-transform:uppercase}
 .sp-item{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:12px 16px;border-bottom:1px solid var(--line);cursor:pointer;font-family:var(--sans);font-size:13.5px;color:var(--ink);transition:background .12s;background:transparent;border-left:none;border-right:none;border-top:none;width:100%;text-align:left;font-family:inherit}
-.sp-item:hover{background:rgba(138,107,22,.08)}
+.sp-item:hover{background:rgba(180,255,58,.08)}
 .sp-item:last-child{border-bottom:none}
 .sp-item em{font-family:var(--mono);font-size:9.5px;color:var(--mut);font-style:normal;letter-spacing:.12em}
 .sp-item.danger{color:var(--neg)}
 .sp-item.danger em{color:var(--neg);opacity:.6}
 
-.demo-banner{display:flex;align-items:center;gap:12px;padding:10px 14px;background:rgba(63,98,128,.10);border:1px dashed var(--cyan);font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;color:var(--cyan-b);margin:18px 0 6px}
+.demo-banner{display:flex;align-items:center;gap:12px;padding:10px 14px;background:rgba(92,200,232,.10);border:1px dashed var(--cyan);font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;color:var(--cyan-b);margin:18px 0 6px}
 .demo-banner b{color:var(--cyan-b);font-weight:600;letter-spacing:.14em}
 .demo-banner button{margin-left:auto;background:transparent;border:1px solid var(--cyan);color:var(--cyan);padding:4px 10px;font-family:var(--mono);font-size:10px;letter-spacing:.14em;cursor:pointer;text-transform:uppercase;font-weight:600}
-.demo-banner button:hover{background:rgba(63,98,128,.18)}
+.demo-banner button:hover{background:rgba(92,200,232,.18)}
 
 .draft-notice{padding:12px 16px;background:rgba(232,201,106,.10);border:1px solid var(--warn);font-family:'Noto Serif SC',serif;font-size:13.5px;color:var(--ink);margin:0 0 22px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
 .draft-notice b{font-family:var(--mono);font-size:9.5px;letter-spacing:.24em;color:var(--gold);text-transform:uppercase;font-weight:700}
 .draft-notice button{font-family:var(--mono);font-size:10px;letter-spacing:.14em;padding:5px 12px;background:transparent;border:1px solid var(--gold);color:var(--gold);cursor:pointer;text-transform:uppercase;font-weight:600;margin-left:auto}
-.draft-notice button:hover{background:rgba(138,107,22,.12)}
+.draft-notice button:hover{background:rgba(180,255,58,.12)}
 .draft-notice button.discard{border-color:var(--mut);color:var(--mut);margin-left:6px}
+
+/* ─── v1.2: psy-tag chips · ticker prominence · legend · diary layout ─── */
+.psy-tags{display:inline-flex;flex-wrap:wrap;gap:6px;align-items:center;margin-left:8px;vertical-align:middle}
+.psy-tag{display:inline-flex;align-items:center;gap:4px;font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;line-height:1.2;padding:2px 7px;border:1px solid currentColor;background:transparent;font-weight:700}
+.psy-tag em{font-style:normal;font-size:9.5px;letter-spacing:.12em;opacity:.78}
+@media(max-width:640px){.psy-tag em{display:none}.psy-tag{padding:2px 5px;font-size:12px}}
+
+/* ── ticker prominence · 一眼可见 ── */
+.book-row{grid-template-columns:auto 1fr auto auto auto !important;column-gap:16px !important;align-items:center !important}
+.br-tk{font-family:var(--mono);font-size:18px;font-weight:700;color:var(--acc);letter-spacing:.04em;padding:6px 12px;border:1px solid var(--acc);background:rgba(180,255,58,.06);min-width:88px;text-align:center;line-height:1}
+[data-theme="paper"] .br-tk{background:rgba(138,107,22,.06);color:var(--acc);border-color:var(--acc)}
+.book-row:hover .br-tk{background:rgba(180,255,58,.14);color:var(--acc-b);border-color:var(--acc-b)}
+[data-theme="paper"] .book-row:hover .br-tk{background:rgba(138,107,22,.14)}
+@media(max-width:640px){.br-tk{font-size:14px;padding:4px 8px;min-width:64px}}
+
+/* ── diary entry layout · 真日记本页面感 ── */
+.entry{padding:30px 0 24px;border-bottom:1px dashed var(--line);position:relative}
+.entry-meta-top{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:14px;font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;color:var(--mut);text-transform:uppercase}
+.entry-date-big{font-family:'Playfair Display',serif;font-style:italic;font-size:26px;color:var(--acc);font-weight:700;line-height:1;letter-spacing:-.01em}
+.entry-time{font-family:var(--mono);font-size:10.5px;color:var(--mut);letter-spacing:.14em}
+.entry-tk-line{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:14px;font-family:var(--mono)}
+.entry-tk-big{font-family:var(--mono);font-size:18px;font-weight:700;color:var(--acc);letter-spacing:.04em;padding:5px 10px;border:1px solid var(--acc);background:rgba(180,255,58,.06);line-height:1}
+[data-theme="paper"] .entry-tk-big{background:rgba(138,107,22,.06)}
+.entry-tk-typechip{font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;font-weight:700;padding:3px 9px;border:1px solid currentColor;text-transform:uppercase}
+.entry-tk-typechip.t-buy{color:var(--ok)}
+.entry-tk-typechip.t-add{color:var(--cyan)}
+.entry-tk-typechip.t-trim{color:var(--warn)}
+.entry-tk-typechip.t-sell{color:var(--neg)}
+.entry-tk-typechip.t-review{color:var(--acc)}
+.entry-tk-prices{font-family:'Playfair Display',serif;font-style:italic;font-size:20px;color:var(--ink);font-weight:700;letter-spacing:-.01em}
+.entry-tk-prices em{font-style:normal;font-family:var(--mono);font-size:11px;color:var(--mut);letter-spacing:.04em;margin:0 6px}
+.entry-tk-prices b{font-style:normal;font-weight:700;font-family:'Playfair Display',serif}
+.entry-tk-prices .up{color:var(--ok)} .entry-tk-prices .dn{color:var(--neg)}
+
+.entry-memo-big{font-family:'Noto Serif SC',serif;font-size:17.5px;color:var(--ink);line-height:1.85;padding:6px 0 6px 18px;border-left:3px solid var(--acc);margin-bottom:14px;letter-spacing:.005em}
+.entry-memo-big::before{content:open-quote;font-family:'Playfair Display',serif;color:var(--acc);font-size:24px;line-height:0;margin-right:4px;vertical-align:-6px}
+.entry-tags-line{margin:0 0 16px}
+.entry-state-foot{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;padding-top:10px;border-top:1px dotted var(--line);font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--mut);text-transform:uppercase}
+.entry-state-foot .esf-st{font-family:var(--mono);font-size:10px;letter-spacing:.2em;font-weight:700;padding:3px 9px;border:1px solid currentColor;text-transform:uppercase}
+.entry-state-foot .esf-st.s-清醒{color:var(--st-clear)}
+.entry-state-foot .esf-st.s-漂移{color:var(--st-drift)}
+.entry-state-foot .esf-st.s-干扰{color:var(--st-noise)}
+.entry-state-foot .esf-st.s-接管{color:var(--st-chaos)}
+.entry-state-foot .esf-actions{display:flex;gap:14px;align-items:center}
+.entry-state-foot .esf-actions button{background:transparent;border:none;font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;color:var(--mut);cursor:pointer;text-transform:uppercase;padding:2px 0}
+.entry-state-foot .esf-actions button:hover{color:var(--acc)}
+.entry-state-foot .esf-actions button.danger:hover{color:var(--neg)}
+
+/* legend · 图例对表 */
+.legend{margin:36px 0 12px;border:1px solid var(--line);background:var(--bg2);padding:0}
+.legend-head{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;cursor:pointer;background:transparent;border:none;width:100%;text-align:left;font-family:var(--mono);font-size:11px;letter-spacing:.22em;color:var(--acc);font-weight:700;text-transform:uppercase;border-bottom:1px solid transparent;transition:border-color .15s}
+.legend-head:hover{color:var(--acc-b)}
+.legend-head em{font-style:normal;color:var(--mut);font-size:9.5px;letter-spacing:.14em}
+.legend.open .legend-head{border-bottom-color:var(--line)}
+.legend-body{display:none;padding:14px 16px}
+.legend.open .legend-body{display:block}
+.legend-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:0}
+.legend-item{padding:12px 14px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+.legend-item:nth-last-child(-n+1){border-bottom:none}
+.legend-item:nth-child(3n){border-right:none}
+.legend-item-row{display:flex;align-items:center;gap:10px;margin-bottom:4px;font-family:var(--mono);font-size:13.5px;font-weight:700;color:var(--ink);letter-spacing:.04em}
+.legend-item-row .sym{font-size:16px;font-family:var(--mono);line-height:1;width:20px;text-align:center}
+.legend-item-desc{font-family:'Noto Serif SC',serif;font-style:italic;font-size:12.5px;color:var(--mut);line-height:1.7}
+.legend-divider{padding:8px 14px;font-family:var(--mono);font-size:10px;letter-spacing:.24em;color:var(--acc);font-weight:700;text-transform:uppercase;background:transparent;border-bottom:1px solid var(--line);border-right:1px solid var(--line);grid-column:1/-1}
+@media(max-width:640px){.legend-item{border-right:none}}
 </style>
 </head>
 <body>
@@ -359,7 +426,7 @@ footer.foot a:hover{color:var(--gold-b)}
   <div class="hero">
     <div class="h-eyebrow">ZERO2076 · STOCK JOURNAL · 心境快照</div>
     <h1 class="h-title">股票日记<em>SNAPSHOT THE THESIS</em></h1>
-    <p class="h-sub">情绪化会改写认知 · <b>5 题 ≤ 30 秒</b> + 一句话理由 — 把每一次买入的初衷封进时间胶囊。下次再看时 · 你才知道当时的自己是清醒还是被牵着走。</p>
+    <p class="h-sub">情绪化会改写认知 · <b>7 题 ≤ 45 秒</b> + 一句话理由 — 把每一次买入的初衷封进时间胶囊。下次再看时 · 你才知道当时的自己是清醒还是被牵着走。</p>
     <div class="cta-row">
       <a class="btn primary big" href="#/new">+ 新建日记</a>
       <span style="font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--mut)" id="bookCount">0 本日记 · 0 篇</span>
@@ -381,7 +448,7 @@ footer.foot a:hover{color:var(--gold-b)}
     <div class="wiz-progress">
       <span class="wiz-dot on" id="dot1"></span><span>① 选股</span>
       <span class="wiz-dot" id="dot2"></span><span>② 一句话</span>
-      <span class="wiz-dot" id="dot3"></span><span>③ 5 快选</span>
+      <span class="wiz-dot" id="dot3"></span><span>③ 7 题心境</span>
       <span class="wiz-dot" id="dot4"></span><span>④ 完成</span>
     </div>
 
@@ -426,15 +493,15 @@ footer.foot a:hover{color:var(--gold-b)}
         </div>
       </div>
       <div class="cta-row" style="margin-top:24px">
-        <button class="btn primary" id="toStep3" disabled>下一步 · 进 5 题 →</button>
+        <button class="btn primary" id="toStep3" disabled>下一步 · 进 7 题 →</button>
         <button class="btn" id="backStep1">← 返回选股</button>
       </div>
     </div>
 
     <!-- step 3 -->
     <div class="wiz-step" id="step3">
-      <div class="wiz-lab">STEP 03 · 5 题快选</div>
-      <h2 class="wiz-h" id="stepHeader">5 题快照 · 每题 ≤ 5 秒</h2>
+      <div class="wiz-lab">STEP 03 · 7 题心境</div>
+      <h2 class="wiz-h" id="stepHeader">7 题心境快照 · 每题 ≤ 6 秒</h2>
       <p class="wiz-d">A 清醒 · B 谨慎 · C 干扰 · D 高风险 — 点一下立即跳下一题。</p>
       <div class="q-stack" id="qStack"></div>
       <button class="q-back" id="qBack" style="display:none">← 上一题</button>
@@ -447,7 +514,7 @@ footer.foot a:hover{color:var(--gold-b)}
         <div class="rs-state" id="rsState">—</div>
         <div class="rs-en" id="rsEn">—</div>
         <p class="rs-meaning" id="rsMeaning">—</p>
-        <div class="rs-score"><b id="rsScore">0</b> / 15 分</div>
+        <div class="rs-score"><b id="rsScore">0</b> / 21 分</div>
         <div class="rs-snap" id="rsSnap"></div>
         <div class="cta-row">
           <button class="btn primary big" id="saveEntry">保存到日记本 ↗</button>
@@ -498,20 +565,65 @@ footer.foot a:hover{color:var(--gold-b)}
 // ============================================================
 
 const STATE_DEFS = {
-  "清醒": { en:"CLEAR",  range:[13,15], desc:"事实/证据驱动 · 时间尺度清楚 · 情绪不主导判断。继续按事实更新即可。" },
-  "漂移": { en:"DRIFT",  range:[9,12],  desc:"仍记得初衷 · 但价格 / 他人观点 / 短期叙事开始干扰。先把事实和反应分开记。" },
-  "干扰": { en:"NOISE",  range:[5,8],   desc:"短期体验在改写原始逻辑 · 应回到证据 / 失效条件 / 时间尺度重新校准。" },
+  "清醒": { en:"CLEAR",  range:[17,21], desc:"事实/证据驱动 · 时间尺度清楚 · 情绪不主导判断。继续按事实更新即可。" },
+  "漂移": { en:"DRIFT",  range:[11,16], desc:"仍记得初衷 · 但价格 / 他人观点 / 短期叙事开始干扰。先把事实和反应分开记。" },
+  "干扰": { en:"NOISE",  range:[5,10],  desc:"短期体验在改写原始逻辑 · 应回到证据 / 失效条件 / 时间尺度重新校准。" },
   "接管": { en:"CHAOS",  range:[0,4],   desc:"焦虑/兴奋/翻本欲已主导决策 · 此时不宜动手 · 先降低信息刺激 · 写下情绪来源。" }
 };
 
+// 7 心理深题 · 替代浅表 5 题
 const QUESTIONS = [
-  { h:"我现在按什么动手？",  opts:["业绩/技术/政策有可验证证据","有催化剂 · 但还需验证","主要因为价格表现强或热搜","别人推荐 / 没有证据"] },
-  { h:"我准备拿多久？",      opts:["长期 · ≥1 年 · 看长逻辑","波段 · 几周到几月","短线 · 几天博一下","不知道 · 走着看"] },
-  { h:"我能承受跌多少？",    opts:["写好止损线 · 触发就走","大概有数 · 没明确止损","只有上涨预期 · 没想下跌","没想过 · 不愿意想"] },
-  { h:"价格涨跌会改判断吗？",opts:["不会 · 只看事实变化","有点影响 · 还能分辨","跌就慌 / 涨就追","完全被价格牵着走"] },
-  { h:"现在情绪强度？",      opts:["平静 · 数据驱动","有些紧张 · 能控制","兴奋 / 焦虑 / 着急","翻本欲 / FOMO / 失眠"] }
+  { h:"接下来 3 个月 · 我对它的具体期待是什么？", short:"期待",
+    opts:["有明确催化剂时间表 · 可验证","知道方向 · 但没具体时间","期待它涨 · 说不清为什么","期待它救我 / 证明我对"] },
+  { h:"如果出现反面证据 · 我会怎么做？", short:"反证",
+    opts:["立刻重新评估假设","看是否破坏核心逻辑","找理由 · 解释为什么这次不一样","屏蔽信息源 · 不看"] },
+  { h:"如果半年后这笔亏 30% · 我会？", short:"亏30",
+    opts:["按事先设定的止损执行","重新评估 · 大概率减仓","死扛等回本","加仓摊薄 · 拼一把"] },
+  { h:"判断周期 vs 实际持有周期 · 一致吗？", short:"时间",
+    opts:["完全一致 · 长逻辑配长持","大致一致 · 偶尔刷价","长逻辑买 · 短价看太频","短消息买 · 用长故事安慰"] },
+  { h:"过去 24 小时 · 我看了几次它的价？", short:"看价",
+    opts:["0-2 次 · 不在意","3-5 次 · 正常关注","6-15 次 · 有点放不下",">15 次 · 失眠刷盘"] },
+  { h:"做这个决定时 · 谁在我脑子里说话？", short:"声音",
+    opts:["只有数据和我自己","我自己 + 1-2 个独立分析","大 V / KOL / 群友","全是别人的声音 · 我只是执行"] },
+  { h:"做完这笔后 · 我会如何向自己讲这个故事？", short:"故事",
+    opts:["一笔基于事实的常规操作","一次按计划的执行","一次证明自己眼光的机会","一次翻本 / 救赎 / 必须赢"] }
 ];
 const SCORE = { A:3, B:2, C:1, D:0 };
+
+// 心理标签引擎 · 答案组合 → 符号 tags
+const PSY_TAGS = {
+  "evidence":  { sym:"▲", label:"证据扎实", color:"var(--ok)",      desc:"反证开放 + 声音独立 · 判断基于可验证事实" },
+  "schedule":  { sym:"▮", label:"季度看好", color:"var(--st-clear)",desc:"期待有催化时间表 + 时间尺度自洽 · 长逻辑稳" },
+  "stoploss":  { sym:"■", label:"止损就绪", color:"var(--mut)",     desc:"事先写好止损线 · 触发即执行" },
+  "emotion":   { sym:"◆", label:"情绪驱动", color:"var(--st-noise)",desc:"看价频繁 / 兴奋焦虑 · 情绪可能在主导决策" },
+  "social":    { sym:"●", label:"社交锚定", color:"var(--cyan)",    desc:"判断声音来自 KOL/群友 · 非独立分析" },
+  "blind":     { sym:"✕", label:"屏蔽反面", color:"var(--neg)",     desc:"遇反证找理由或屏蔽 · 锁死假设" },
+  "revenge":   { sym:"⚠", label:"翻本心态", color:"var(--neg)",     desc:"亏损加仓拼一把 / 救赎叙事 · 高风险信号" },
+  "drift":     { sym:"╱", label:"叙事漂移", color:"var(--st-drift)",desc:"短价/短消息买入却用长故事合理化 · 时间错配" }
+};
+
+function computeTags(answers){
+  if(!answers || answers.length < 7) return [];
+  const A = answers;
+  const tags = [];
+  if(A[0]==="A" && (A[3]==="A" || A[3]==="B")) tags.push("schedule");
+  if((A[1]==="A"||A[1]==="B") && (A[5]==="A"||A[5]==="B")) tags.push("evidence");
+  if(A[2]==="A") tags.push("stoploss");
+  if(A[4]==="C" || A[4]==="D" || A[6]==="D") tags.push("emotion");
+  if(A[5]==="C" || A[5]==="D") tags.push("social");
+  if(A[1]==="D") tags.push("blind");
+  if(A[2]==="D" || A[6]==="D") tags.push("revenge");
+  if(A[3]==="C" || A[3]==="D") tags.push("drift");
+  return tags;
+}
+function renderTagChips(tags, opts){
+  if(!tags || !tags.length) return "";
+  const klass = opts?.klass || "psy-tag";
+  return `<span class="psy-tags">` + tags.map(t => {
+    const def = PSY_TAGS[t]; if(!def) return "";
+    return `<span class="${klass}" style="color:${def.color}" title="${escapeHtml(def.label+' · '+def.desc)}">${def.sym}<em>${escapeHtml(def.label)}</em></span>`;
+  }).join("") + `</span>`;
+}
 
 const STORE_KEY = "journal_v1";
 const DEMO_FLAG = "journal_v1_demo_seen";
@@ -542,13 +654,13 @@ function maybeSeedDemo(){
     entries: [
       { id: uid(), date: dStr(45), time: "10:32", price: 142.5, currency: "USD", type: "buy",
         memo: "Blackwell 量产 + Hyperscaler 订单 4Q 满载 · 25x 估值还在合理区间 · 拿到下个财季验证。",
-        answers: ["A","A","B","A","A"], score: 14, state: "清醒" },
+        answers: ["A","A","A","A","B","A","A"], score: 19, state: "清醒" },
       { id: uid(), date: dStr(18), time: "21:14", price: 168.9, currency: "USD", type: "add",
         memo: "财报超预期但盘后跌 · 自己有点想加 · 先冷静一下 · 这是事实还是叙事？",
-        answers: ["B","A","B","C","C"], score: 9, state: "漂移" },
+        answers: ["A","B","B","B","C","B","C"], score: 13, state: "漂移" },
       { id: uid(), date: dStr(3),  time: "08:47", price: 295.2, currency: "USD", type: "review",
         memo: "最近一直在刷价格 · 不舒服 · 但事实没变 · 写下来提醒自己 · 别在恐惧里做决定。",
-        answers: ["B","A","B","B","B"], score: 11, state: "漂移" },
+        answers: ["B","B","B","C","C","B","C"], score: 9, state: "干扰" },
     ]
   };
   save(d);
@@ -622,18 +734,59 @@ function renderHome(){
       <button id="btnDismissDemo">✕ 隐藏示例</button>
     </div>` : "";
 
-  list.innerHTML = demoBanner + rows.map(r => `
+  list.innerHTML = demoBanner + rows.map(r => {
+    const tags = r.latest ? computeTags(r.latest.answers) : [];
+    return `
     <a class="book-row" href="#/book/${encodeURIComponent(r.tk)}">
-      <span class="br-tk">${escapeHtml(r.tk)}${r.demo ? " <em style='color:var(--cyan);font-family:var(--mono);font-style:normal;font-size:9px;letter-spacing:.18em'>· DEMO</em>" : ""}</span>
-      <span class="br-name">${escapeHtml(r.b.name || r.tk)}<em>${escapeHtml(r.b.exchange || "")}</em></span>
+      <span class="br-tk">${escapeHtml(r.tk)}</span>
+      <span class="br-name">${escapeHtml(r.b.name || r.tk)}<em>${escapeHtml(r.b.exchange || "")}</em>${r.demo ? " <em style='color:var(--cyan);font-family:var(--mono);font-style:normal;font-size:9px;letter-spacing:.18em'>· DEMO</em>" : ""}${tags.length ? renderTagChips(tags) : ""}</span>
       <span class="br-count">${r.count} 篇</span>
       <span class="br-date">${escapeHtml(r.latest?.date || "")}</span>
       <span class="br-state s-${r.latest?.state || "干扰"}">${r.latest?.state || "—"}</span>
     </a>
-  `).join("");
+  `;}).join("") + legendHtml();
 
   const btnD = document.getElementById("btnDismissDemo");
   if(btnD) btnD.addEventListener("click",(e)=>{ e.preventDefault(); dismissDemo(); });
+  bindLegend();
+}
+
+function legendHtml(){
+  const stateRow = Object.entries(STATE_DEFS).map(([name, def]) =>
+    `<div class="legend-item"><div class="legend-item-row"><span class="sym" style="color:var(--st-${name});font-family:var(--mono)">${name.slice(0,1)}</span>${escapeHtml(name)} · ${def.en} <em style="color:var(--mut);font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;margin-left:6px">${def.range[0]}-${def.range[1]}</em></div><div class="legend-item-desc">${escapeHtml(def.desc)}</div></div>`).join("");
+  const tagRow = Object.entries(PSY_TAGS).map(([k, def]) =>
+    `<div class="legend-item"><div class="legend-item-row"><span class="sym" style="color:${def.color}">${def.sym}</span>${escapeHtml(def.label)}</div><div class="legend-item-desc">${escapeHtml(def.desc)}</div></div>`).join("");
+  const typeRow = Object.entries(ENTRY_TYPES).map(([k, def]) =>
+    `<div class="legend-item"><div class="legend-item-row"><span class="sym" style="color:var(--acc);font-size:10px">${def.en}</span>${escapeHtml(def.label)}</div><div class="legend-item-desc">${escapeHtml(def.desc)}</div></div>`).join("");
+  return `
+    <details class="legend" id="legendBox">
+      <summary class="legend-head" style="list-style:none">
+        <span>◇ LEGEND · 符号对表 · 4 心境 / 8 心理 tag / 5 操作类型</span>
+        <em>点开 ▾</em>
+      </summary>
+      <div class="legend-body" style="display:block">
+        <div class="legend-grid">
+          <div class="legend-divider">◇ 4 心境 STATE · 分数区间 0-21</div>
+          ${stateRow}
+        </div>
+        <div class="legend-grid" style="margin-top:8px">
+          <div class="legend-divider">◇ 8 心理 PSY-TAG · 答案模式自动挂</div>
+          ${tagRow}
+        </div>
+        <div class="legend-grid" style="margin-top:8px">
+          <div class="legend-divider">◇ 5 操作 ENTRY TYPE · 新建时选</div>
+          ${typeRow}
+        </div>
+      </div>
+    </details>`;
+}
+function bindLegend(){
+  const box = document.getElementById("legendBox");
+  if(!box) return;
+  // <details> auto-toggles; manually sync .open class for our own styling
+  const sync = () => box.classList.toggle("open", box.open);
+  box.addEventListener("toggle", sync);
+  sync();
 }
 
 // ============================================================
@@ -825,7 +978,7 @@ function renderQuestion(){
   const stack = document.getElementById("qStack");
   const i = WIZ.curQ;
   const q = QUESTIONS[i];
-  document.getElementById("stepHeader").textContent = `5 题快照 · 第 ${i+1} / ${QUESTIONS.length}`;
+  document.getElementById("stepHeader").textContent = `7 题心境 · 第 ${i+1} / ${QUESTIONS.length}`;
   document.getElementById("qBack").style.display = i > 0 ? "block" : "none";
   const cardHtml = `
     <div class="q-card show">
@@ -873,7 +1026,8 @@ function renderResult(){
     <div>标的<b>${escapeHtml(WIZ.ticker)}</b></div>
     <div>当时价<b>${formatPrice(WIZ.price)}${WIZ.currency ? " "+escapeHtml(WIZ.currency) : ""}</b></div>
     <div>日期<b>${escapeHtml(WIZ.date)}</b></div>
-    <div>分数<b>${score} / 15</b></div>
+    <div>分数<b>${score} / 21</b></div>
+    <div>标签<b style="font-family:var(--mono);font-size:14px">${computeTags(WIZ.answers).map(t=>PSY_TAGS[t]?.sym||"").join(" ")||"—"}</b></div>
   `;
 }
 document.getElementById("saveEntry").addEventListener("click",()=>{
@@ -933,7 +1087,7 @@ async function renderBook(tk){
   document.getElementById("bkPrice").innerHTML = `<span style="font-family:var(--mono);font-size:10px;color:var(--mut);letter-spacing:.18em">实时价 ·</span> <b>载入中…</b>`;
   const entries = (b.entries||[]).slice().sort((a,b)=>a.date.localeCompare(b.date));
   document.getElementById("bkTrend").innerHTML = entries.length
-    ? entries.map(e=>`<div class="tnode s-${e.state}" title="${escapeHtml(e.date+" · "+e.state+" · "+(e.score||0)+"/15")}">${e.state.slice(0,1)}</div>`).join("")
+    ? entries.map(e=>`<div class="tnode s-${e.state}" title="${escapeHtml(e.date+" · "+e.state+" · "+(e.score||0)+"/21")}">${e.state.slice(0,1)}</div>`).join("")
     : `<div class="bk-trend-lab" style="padding:12px 0">暂无心境记录</div>`;
 
   let livePrice = null, liveCurrency = null;
@@ -1030,30 +1184,45 @@ function formatMarketCap(v, ccy){
 function entryHtml(e, tk, livePrice){
   const type = e.type || "buy";
   const tdef = ENTRY_TYPES[type] || ENTRY_TYPES.buy;
-  let pnlHtml = "";
+  const priceLabel = type === "sell" ? "卖出价" : type === "trim" ? "减仓价" : type === "review" ? "当时价" : type === "add" ? "加仓价" : "买入价";
+  let priceLine = `<span class="entry-tk-prices"><em>${priceLabel}</em><b>${formatPrice(e.price)}</b>`;
+  if(e.currency) priceLine += `<em style="margin-left:4px">${escapeHtml(e.currency)}</em>`;
   if(livePrice != null && e.price != null){
     const pnl = +(((livePrice - e.price) / e.price) * 100).toFixed(2);
-    const cls = pnl > 0 ? "up" : pnl < 0 ? "dn" : "flat";
+    const cls = pnl > 0 ? "up" : pnl < 0 ? "dn" : "";
     const sign = pnl > 0 ? "+" : "";
-    pnlHtml = `<span class="entry-pnl ${cls}">${sign}${pnl}% 距今</span>`;
+    priceLine += ` <em style="margin-left:8px">→ 现</em><b class="${cls}">${formatPrice(livePrice)}</b> <em class="${cls}" style="font-family:var(--mono);font-size:12.5px">${sign}${pnl}%</em>`;
   }
-  const priceLabel = type === "sell" ? "卖出价" : type === "trim" ? "减仓价" : type === "review" ? "当时价" : type === "add" ? "加仓价" : "买入价";
+  priceLine += `</span>`;
+  const dateParts = (e.date || "").split("-");
+  const dateBig = dateParts.length === 3 ? `${dateParts[0]} · ${dateParts[1]} · ${dateParts[2]}` : escapeHtml(e.date || "—");
+  const dayOfWeek = e.date ? ["SUN","MON","TUE","WED","THU","FRI","SAT"][new Date(e.date).getDay()] : "";
+  const tags = computeTags(e.answers);
   return `
     <div class="entry" data-id="${e.id}">
-      <div class="entry-head">
-        <span class="entry-date"><span class="entry-type-chip t-${type}">${tdef.en}</span>${escapeHtml(e.date)}${e.time ? " · "+escapeHtml(e.time) : ""}</span>
-        <span class="entry-st s-${e.state}">${e.state} · ${e.score}/15</span>
+      <div class="entry-meta-top">
+        <span class="entry-date-big">${dateBig}</span>
+        ${dayOfWeek ? `<span class="entry-time">${dayOfWeek}</span>` : ""}
+        ${e.time ? `<span class="entry-time">· ${escapeHtml(e.time)}</span>` : ""}
       </div>
-      <div class="entry-memo">${escapeHtml(e.memo || "—")}</div>
-      <div class="entry-snap">
-        <span>${priceLabel} <b>${formatPrice(e.price)}${e.currency ? " "+escapeHtml(e.currency) : ""}</b></span>
-        ${pnlHtml ? `<span>${pnlHtml}</span>` : ""}
-        <span>分数 <b>${e.score} / 15</b></span>
-        <span>答案 <b>${(e.answers||[]).join(" · ")}</b></span>
+      <div class="entry-tk-line">
+        <span class="entry-tk-big">${escapeHtml(tk)}</span>
+        <span class="entry-tk-typechip t-${type}">${tdef.label} · ${tdef.en}</span>
+        ${priceLine}
       </div>
-      <button class="entry-toggle" data-toggle="${e.id}">▸ 查看 5 题答案</button>
-      <button class="entry-del" data-del="${e.id}" style="float:right">删除</button>
-      <div class="entry-detail" id="ed-${e.id}">
+      <div class="entry-memo-big">${escapeHtml(e.memo || "—")}</div>
+      ${tags.length ? `<div class="entry-tags-line">${renderTagChips(tags)}</div>` : ""}
+      <div class="entry-state-foot">
+        <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
+          <span class="esf-st s-${e.state}">${e.state} · ${e.score}/21</span>
+          <span>答案 · ${(e.answers||[]).join(" · ")}</span>
+        </div>
+        <div class="esf-actions">
+          <button data-toggle="${e.id}">▸ 看 7 题</button>
+          <button class="danger" data-del="${e.id}">删除</button>
+        </div>
+      </div>
+      <div class="entry-detail" id="ed-${e.id}" style="margin-top:14px">
         ${QUESTIONS.map((q,i)=>`<div class="ed-row"><span class="ed-q">${i+1}. ${escapeHtml(q.h)}</span><span class="ed-a">${(e.answers||[])[i] || "—"} <em>${escapeHtml(q.opts[["A","B","C","D"].indexOf((e.answers||[])[i])] || "")}</em></span></div>`).join("")}
       </div>
     </div>
@@ -1065,7 +1234,7 @@ function bindEntryActions(tk){
       const id = btn.dataset.toggle;
       const det = document.getElementById("ed-"+id);
       det.classList.toggle("show");
-      btn.textContent = det.classList.contains("show") ? "▾ 收起 5 题答案" : "▸ 查看 5 题答案";
+      btn.textContent = det.classList.contains("show") ? "▾ 收起 7 题" : "▸ 看 7 题";
     });
   });
   document.querySelectorAll("[data-del]").forEach(btn=>{
@@ -1104,7 +1273,7 @@ function renderSearch(q){
       <a href="#/book/${encodeURIComponent(b.ticker)}">
         <div class="sr-item-row">
           <span class="sr-item-tk">${escapeHtml(b.ticker)}<em>${escapeHtml(b.name||"")}</em></span>
-          <span class="sr-item-d">${escapeHtml(e.date)} · ${e.state} · ${e.score}/15</span>
+          <span class="sr-item-d">${escapeHtml(e.date)} · ${e.state} · ${e.score}/21</span>
         </div>
         <div class="sr-item-memo">${highlight(e.memo||"", ql)}</div>
       </a>
