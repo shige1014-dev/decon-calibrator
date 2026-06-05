@@ -1,7 +1,7 @@
 {
-  "name": "投资初衷校准器 · CALIBRATOR",
-  "short_name": "校准器",
-  "description": "委员会版 · 像成熟投资人审查一份投资备忘录",
+  "name": "股票日记 · STOCK JOURNAL",
+  "short_name": "股票日记",
+  "description": "5 题快选 + 一句话理由 · 把每一次买入的初衷封进时间胶囊",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0E1218",
