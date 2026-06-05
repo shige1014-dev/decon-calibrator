@@ -4,7 +4,7 @@
   "description": "5 题快选 + 一句话理由 · 把每一次买入的初衷封进时间胶囊",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0E1218",
-  "theme_color": "#0E1218",
+  "background_color": "#F2EAD5",
+  "theme_color": "#F2EAD5",
   "icons": []
 }
