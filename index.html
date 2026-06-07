@@ -1270,6 +1270,11 @@ html[data-theme="color"]{background:#222A2A}
 .bc-name{font-size:18px!important;margin-top:5px!important}
 .bc-price{font-size:24px!important}
 .bc-state{background:transparent!important;border:1px solid var(--line)!important;color:var(--mut)!important;padding:3px 9px!important}
+/* 删除日记本 ✕ (常显, 手机也可点) */
+.book-card{position:relative}
+.bc-del{position:absolute;top:9px;right:11px;z-index:3;background:transparent;border:0;color:var(--tf);font-size:13px;line-height:1;padding:5px;cursor:pointer;opacity:.45;transition:opacity .15s,color .15s}
+.bc-del:hover,.bc-del:active{opacity:1;color:var(--neg)}
+.book-card:hover .bc-del{opacity:.7}
 /* 新建卡: 实心翡翠突兀块 → 细线幽灵卡 · 压缩 · 横排 */
 .bc-new{min-height:0!important;padding:15px!important;border:1px dashed var(--acc)!important;border-radius:13px!important;background:transparent!important;color:var(--acc)!important;display:flex;flex-direction:row;gap:9px;align-items:center;justify-content:center}
 .bc-new>span{display:flex;flex-direction:row;gap:9px;align-items:center}
@@ -1289,6 +1294,10 @@ html[data-theme="color"]{background:#222A2A}
 .bs-cell b{font-size:17px!important;margin-top:5px!important;color:var(--ink)!important}
 .bs-cell b.up{color:var(--ok)!important}
 .bs-cell b.dn{color:var(--neg)!important}
+/* 10题展开: 防答案被挤成竖排一字一行 */
+.entry-detail .ed-row{grid-template-columns:minmax(0,1.4fr) minmax(0,1fr)!important;align-items:baseline}
+.entry-detail .ed-q{max-width:none!important}
+.entry-detail .ed-a{word-break:normal;overflow-wrap:anywhere}
 
 /* ─── 便条: 贴时间线 · 高密度 · 突出正文 ─── */
 .notes-box{padding:0!important;border-radius:0!important;background:transparent!important;border:0!important;position:relative;margin-left:7px;padding-left:20px!important}
@@ -1382,8 +1391,14 @@ html,body{overflow-x:hidden;max-width:100%}
   .wsb-cell b,[data-theme] .wsb-cell:nth-child(1) b{font-size:21px!important}
   .home-prin{grid-template-columns:1fr!important}
   .books-grid{grid-template-columns:1fr!important}
-  .log-add{flex-wrap:wrap}
-  .log-add .btn{flex:1 1 100%}
+  /* 经验台按钮不抢戏: 小尺寸 inline (回车也能加) */
+  .log-add{flex-wrap:nowrap!important;gap:8px!important}
+  .log-add .btn{flex:none!important;padding:9px 14px!important;font-size:10.5px!important;min-height:38px!important}
+  .la-row .btn{flex:none!important}
+  .log-hero .h-title{font-size:17px!important}
+  /* 10题展开: 手机堆叠单列(问题上, 答案下缩进) */
+  .entry-detail .ed-row{grid-template-columns:1fr!important;gap:3px!important;padding:10px 0!important}
+  .entry-detail .ed-a{padding-left:12px;border-left:2px solid var(--line)}
 }
 /* ═══════════════════════════════════════════════════════════════════════ */
 </style>
@@ -1921,6 +1936,14 @@ function renderHome(){
 
   const btnD = document.getElementById("btnDismissDemo");
   if(btnD) btnD.addEventListener("click",(e)=>{ e.preventDefault(); dismissDemo(); });
+  // 删除日记本
+  document.querySelectorAll("[data-book-del]").forEach(btn => btn.addEventListener("click",(e)=>{
+    e.preventDefault(); e.stopPropagation();
+    const tk = btn.dataset.bookDel;
+    if(!confirm(`删除日记本「${tk}」？所有篇章和便条都会一并删除，无法撤销。`)) return;
+    const d = load(); delete d.books[tk]; save(d);
+    renderHome();
+  }));
   bindLegend();
 
   // fetch live prices in background · update each card when arrives
@@ -1937,6 +1960,7 @@ function bookCardHtml(r){
     : `<div class="bc-memo bc-empty">还没写一句话</div>`;
   return `
     <a class="book-card ${r.demo ? "demo" : ""}" href="#/book/${encodeURIComponent(r.tk)}" data-tk="${escapeHtml(r.tk)}">
+      <button class="bc-del" data-book-del="${escapeHtml(r.tk)}" title="删除日记本" type="button">✕</button>
       <div class="bc-head">
         <span class="bc-tk">${escapeHtml(r.tk)}</span>
         <span class="bc-state s-${r.latestState}">${r.latestState}${r.latestThesis ? " · "+r.latestThesis.score+"/30" : ""}</span>
