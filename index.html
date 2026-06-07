@@ -1281,10 +1281,26 @@ html[data-theme="color"]{background:#222A2A}
 /* 删除日记本 = 红色小点 (不与代码/数字重合) */
 .book-card{position:relative}
 .bc-head{padding-right:18px!important}
-.bc-del{position:absolute;top:13px;right:13px;z-index:3;width:9px;height:9px;padding:0;border:0;border-radius:50%;background:var(--neg);font-size:0;line-height:0;cursor:pointer;opacity:.65;transition:opacity .15s,transform .12s;box-shadow:0 0 0 4px transparent}
-.bc-del:hover,.bc-del:active{opacity:1;transform:scale(1.25)}
+.bc-del{position:absolute;top:5px;right:5px;z-index:5;width:32px;height:32px;display:grid;place-items:center;padding:0;border:0;background:transparent;font-size:0;cursor:pointer;opacity:.7;transition:opacity .15s,transform .12s}
+.bc-del::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--neg)}
+.bc-del:hover,.bc-del:active{opacity:1;transform:scale(1.15)}
 /* 股票代码加粗 */
-.bc-tk,.bk-tk,.nc-tk{font-weight:800!important;letter-spacing:.04em}
+.bc-tk,.bk-tk,.nc-tk{font-weight:900!important;letter-spacing:.04em}
+/* — 批量管理删除模式 — */
+.wall-manage{background:transparent;border:1px solid var(--line);color:var(--mut);font-family:var(--mono);font-size:10px;letter-spacing:.12em;padding:3px 11px;border-radius:6px;cursor:pointer;transition:border-color .15s,color .15s}
+.wall-manage:hover{border-color:var(--gold);color:var(--gold)}
+.manage-bar{display:flex;gap:10px;align-items:center;margin:0 0 14px}
+.mb-del{background:var(--neg);color:#fff;border:0;border-radius:8px;padding:10px 18px;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer}
+.mb-del em{font-style:normal;font-family:var(--mono);opacity:.9;margin-left:2px}
+.mb-all{background:transparent;border:1px solid var(--line);color:var(--mut);border-radius:8px;padding:10px 14px;font-size:12px;cursor:pointer}
+.mb-all:active,.mb-del:active{transform:scale(.97)}
+.bc-check{position:absolute;top:11px;right:11px;width:22px;height:22px;border-radius:50%;border:2px solid var(--line);background:var(--bg3);display:none;z-index:4}
+.books-grid.manage .bc-del{display:none}
+.books-grid.manage .bc-check{display:block}
+.books-grid.manage .book-card{cursor:pointer}
+.books-grid.manage .book-card.selected{outline:2px solid var(--acc);outline-offset:2px}
+.books-grid.manage .book-card.selected .bc-check{border-color:var(--acc);background:var(--acc)}
+.books-grid.manage .book-card.selected .bc-check::after{content:"✓";position:absolute;inset:-2px;display:grid;place-items:center;color:var(--on-accent);font-size:13px;font-weight:800}
 /* 新建卡: 实心翡翠突兀块 → 细线幽灵卡 · 压缩 · 横排 */
 .bc-new{min-height:0!important;padding:15px!important;border:1px dashed var(--acc)!important;border-radius:13px!important;background:transparent!important;color:var(--acc)!important;display:flex;flex-direction:row;gap:9px;align-items:center;justify-content:center}
 .bc-new>span{display:flex;flex-direction:row;gap:9px;align-items:center}
@@ -1889,6 +1905,8 @@ document.getElementById("lessonForm").addEventListener("submit", e => {
 // ============================================================
 // HOME · 笔记墙 (个股本)
 // ============================================================
+var bookManage = false;
+var bookSel = new Set();
 function renderHome(){
   const d = load();
   const tickers = Object.keys(d.books);
@@ -1948,23 +1966,62 @@ function renderHome(){
     <ol class="prin-list home-prin">${prins.slice(0,6).map(p=>`<li class="prin-item"><span class="prin-text">${escapeHtml(p.text)}</span></li>`).join("")}</ol>
   ` : `<div class="wall-head"><span>◆ 我的原则 · PRINCIPLES</span><em><a href="#/log" class="wh-link">去经验台定下第一条 ›</a></em></div>`;
 
-  const wallHead = `<div class="wall-head" style="margin-top:30px"><span>◇ 笔记墙 · MY BOOKS</span><em>${totalBooks} 本 · 按最新活动排</em></div>`;
+  const manageBtn = totalBooks ? ` · <button class="wall-manage" id="btnManage" type="button">${bookManage ? "完成" : "管理"}</button>` : "";
+  const wallHead = `<div class="wall-head" style="margin-top:30px"><span>◇ 笔记墙 · MY BOOKS</span><em>${totalBooks} 本${manageBtn}</em></div>`
+    + (bookManage ? `<div class="manage-bar"><button class="mb-del" id="btnDelSel" type="button">删除选中 <em id="selN">0</em></button><button class="mb-all" id="btnSelAll" type="button">全选</button></div>` : "");
 
   const cards = rows.map(r => bookCardHtml(r)).join("");
-  const newCard = `<a class="bc-new" href="#/new"><span><b>+</b>新建笔记</span></a>`;
+  const newCard = bookManage ? "" : `<a class="bc-new" href="#/new"><span><b>+</b>新建笔记</span></a>`;
 
-  list.innerHTML = demoBanner + prinBlock + wallHead + `<div class="books-grid">${cards}${newCard}</div>` + legendHtml();
+  list.innerHTML = demoBanner + prinBlock + wallHead + `<div class="books-grid${bookManage ? " manage" : ""}">${cards}${newCard}</div>` + legendHtml();
 
   const btnD = document.getElementById("btnDismissDemo");
   if(btnD) btnD.addEventListener("click",(e)=>{ e.preventDefault(); dismissDemo(); });
-  // 删除日记本
-  document.querySelectorAll("[data-book-del]").forEach(btn => btn.addEventListener("click",(e)=>{
-    e.preventDefault(); e.stopPropagation();
-    const tk = btn.dataset.bookDel;
-    if(!confirm(`删除日记本「${tk}」？所有篇章和便条都会一并删除，无法撤销。`)) return;
-    const d = load(); delete d.books[tk]; save(d);
-    renderHome();
-  }));
+
+  const grid = list.querySelector(".books-grid");
+  // 管理模式开关
+  const bm = document.getElementById("btnManage");
+  if(bm) bm.addEventListener("click", ()=>{ bookManage = !bookManage; bookSel.clear(); renderHome(); });
+
+  if(bookManage){
+    // 批量选择
+    const updN = ()=>{ const s = document.getElementById("selN"); if(s) s.textContent = bookSel.size; };
+    grid.querySelectorAll(".book-card[data-tk]").forEach(card => {
+      if(bookSel.has(card.dataset.tk)) card.classList.add("selected");
+      card.addEventListener("click",(e)=>{
+        e.preventDefault(); e.stopPropagation();
+        const tk = card.dataset.tk;
+        if(bookSel.has(tk)){ bookSel.delete(tk); card.classList.remove("selected"); }
+        else { bookSel.add(tk); card.classList.add("selected"); }
+        updN();
+      });
+    });
+    updN();
+    const bdel = document.getElementById("btnDelSel");
+    if(bdel) bdel.addEventListener("click",()=>{
+      if(!bookSel.size){ alert("先点选要删除的日记本"); return; }
+      if(!confirm(`删除选中的 ${bookSel.size} 本日记本？所有篇章和便条一并删除，无法撤销。`)) return;
+      const d = load(); bookSel.forEach(tk => delete d.books[tk]); save(d);
+      bookSel.clear(); bookManage = false; renderHome();
+    });
+    const ball = document.getElementById("btnSelAll");
+    if(ball) ball.addEventListener("click",()=>{
+      grid.querySelectorAll(".book-card[data-tk]").forEach(c => { bookSel.add(c.dataset.tk); c.classList.add("selected"); });
+      updN();
+    });
+  } else {
+    // 单本快删 (红点)
+    grid.querySelectorAll("[data-book-del]").forEach(btn => {
+      btn.addEventListener("pointerdown", ev => ev.stopPropagation());
+      btn.addEventListener("click",(e)=>{
+        e.preventDefault(); e.stopPropagation();
+        const tk = btn.dataset.bookDel;
+        if(!confirm(`删除日记本「${tk}」？所有篇章和便条都会一并删除，无法撤销。`)) return;
+        const d = load(); delete d.books[tk]; save(d);
+        renderHome();
+      });
+    });
+  }
   bindLegend();
 
   // fetch live prices in background · update each card when arrives
@@ -1982,6 +2039,7 @@ function bookCardHtml(r){
   return `
     <a class="book-card ${r.demo ? "demo" : ""}" href="#/book/${encodeURIComponent(r.tk)}" data-tk="${escapeHtml(r.tk)}">
       <button class="bc-del" data-book-del="${escapeHtml(r.tk)}" title="删除日记本" type="button" aria-label="删除日记本"></button>
+      <span class="bc-check" aria-hidden="true"></span>
       <div class="bc-head">
         <span class="bc-tk">${escapeHtml(r.tk)}</span>
         <span class="bc-state s-${r.latestState}">${r.latestState}${r.latestThesis ? " · "+r.latestThesis.score+"/30" : ""}</span>
