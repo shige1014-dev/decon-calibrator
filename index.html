@@ -1343,10 +1343,14 @@ html[data-theme="color"]{background:#222A2A}
 .lesson-card .nc-title{font-family:var(--serif)}
 .wh-link{color:var(--gold)!important;text-decoration:none}
 .wh-link:hover{color:var(--gold-b)!important}
-/* 首页原则: 双列高密度 · 只读 */
+/* 首页原则: 双列高密度 · 只读 · 编号降为柔和(不金) */
 .home-prin{display:grid;grid-template-columns:1fr 1fr;gap:0 34px;margin-bottom:4px}
 .home-prin .prin-item{padding:9px 0}
+.home-prin .prin-item::before{color:var(--mut)!important}
 .home-prin .prin-text{font-size:14px}
+/* wall-head 标题变小 */
+.wall-head{font-size:14.5px!important;font-weight:600!important}
+.wall-head em{font-size:9px!important}
 
 /* ─── 手机溢出修复: 防横向超屏 ─── */
 html,body{overflow-x:hidden;max-width:100%}
