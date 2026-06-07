@@ -654,8 +654,8 @@ footer.foot a:hover{color:var(--gold-b)}
   --acc:#2CC295;
   --acc-b:#00DF81;
   --acc-soft:rgba(44,194,149,.13);
-  --gold:#2CC295;
-  --gold-b:#00DF81;
+  --gold:#C9A96A;
+  --gold-b:#E2C792;
   --cyan:#38C7DD;
   --cyan-b:#8BE5F1;
   --lav:#9FC9BD;
@@ -666,13 +666,13 @@ footer.foot a:hover{color:var(--gold-b)}
   --mut:#7E978D;
   --tf:#4A6359;
   --ok:#3FD08A;
-  --warn:#E7CB62;
-  --neg:#FF725F;
+  --warn:#C9A96A;
+  --neg:#E8695A;
   --pend:#6E8A80;
   --st-clear:#3FD08A;
-  --st-drift:#E7CB62;
-  --st-noise:#F09C4A;
-  --st-chaos:#FF725F;
+  --st-drift:#C9A96A;
+  --st-noise:#D98A4E;
+  --st-chaos:#E8695A;
   --r-sm:12px;
   --r-md:18px;
   --r-lg:26px;
@@ -1237,6 +1237,89 @@ html[data-theme="color"]{background:#222A2A}
   .notes-stack{grid-template-columns:1fr}
   .note-card{min-height:0}
 }
+
+/* ═══════════════ v2 · 一致性收口 + 高密度去框 (2026-06-07) ═══════════════
+   铁律: 主色统治 · 强调色(金)只做小面积亮点 · 细线分隔替代填充框 · 压缩留白
+   结构层(var 驱动 · 三主题通用) — 颜色一致性由各主题 token 保证             */
+
+/* — 顶栏: 去浮窗 → 贴顶全宽扁平栏 — */
+.topbar{position:sticky;top:0;margin:0!important;max-width:none!important;width:100%;border-radius:0!important;padding:9px 20px!important;border:0!important;border-bottom:1px solid var(--line)!important;box-shadow:none!important;background:color-mix(in srgb, var(--bg) 88%, transparent)!important;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+
+/* — Hero 压缩 · 删装饰圆圈 — */
+.hero{margin-top:14px;padding:30px 30px 24px;border-radius:16px}
+.hero::before{display:none}
+.h-eyebrow{margin-bottom:9px}
+.h-title{font-size:clamp(30px,5.2vw,52px);margin-bottom:12px}
+.h-sub{margin-bottom:18px;line-height:1.7}
+.btn.big{padding:12px 20px}
+
+/* — 统计条: 去填充框 → 细线内联条 — */
+.wall-statsbar{display:flex!important;gap:0;margin:12px 0 16px;border:0!important;border-radius:0;background:transparent!important;overflow:visible;box-shadow:none!important}
+.wsb-cell,
+[data-theme] .wsb-cell:nth-child(n){flex:1;min-height:0!important;padding:2px 22px!important;border:0!important;border-left:1px solid var(--line)!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;color:var(--mut)!important}
+.wsb-cell:first-child{border-left:0!important;padding-left:0!important}
+.wsb-cell b,[data-theme] .wsb-cell:nth-child(1) b{display:block;margin-top:4px!important;font-size:27px!important;color:var(--ink)!important;font-family:var(--mono);line-height:1;font-weight:700}
+.wsb-cell em{display:block;font-style:normal;font-size:10px;color:var(--tf);margin-top:3px}
+
+/* — 卡墙: 压缩 · 同色调一族 · 删装饰 — */
+.wall-head{margin:24px 2px 12px}
+.books-grid{gap:11px!important;grid-template-columns:repeat(auto-fill,minmax(300px,1fr))!important}
+.book-card,
+[data-theme] .book-card:nth-child(n){min-height:0!important;padding:15px 17px!important;border-radius:13px!important;box-shadow:none!important;border:1px solid var(--line)!important;background:var(--bg2)!important}
+.book-card::after{display:none}
+.book-card:hover{transform:none!important;border-color:var(--gold)!important;box-shadow:none!important}
+.bc-name{font-size:18px!important;margin-top:5px!important}
+.bc-price{font-size:24px!important}
+.bc-state{background:transparent!important;border:1px solid var(--line)!important;color:var(--mut)!important;padding:3px 9px!important}
+/* 新建卡: 实心翡翠突兀块 → 细线幽灵卡 · 压缩 · 横排 */
+.bc-new{min-height:0!important;padding:15px!important;border:1px dashed var(--acc)!important;border-radius:13px!important;background:transparent!important;color:var(--acc)!important;display:flex;flex-direction:row;gap:9px;align-items:center;justify-content:center}
+.bc-new>span{display:flex;flex-direction:row;gap:9px;align-items:center}
+.bc-new:hover{background:var(--acc-soft)!important;color:var(--acc-b)!important;transform:none!important}
+.bc-new b{font-size:19px!important;margin:0!important}
+
+/* — 书详情: 去琥珀/填充块 → 统一细线 · 压缩 — */
+.bk-hero{padding:22px!important;border-radius:14px!important;box-shadow:none!important;border:1px solid var(--line)!important;background:transparent!important;margin-top:8px!important}
+.bk-name{margin-bottom:8px!important}
+.thesis-card{margin:8px 0 16px!important;padding:0 0 0 16px!important;border-radius:0!important;background:transparent!important;border-left:2px solid var(--gold)!important}
+.bk-trend{background:transparent!important;border:1px solid var(--line)!important;padding:11px!important;border-radius:10px!important}
+.book-stats{gap:0!important;margin-top:12px!important}
+.bs-cell{border-right:1px solid var(--line)!important;padding:10px 14px!important}
+
+/* ─── 便条: 贴时间线 · 高密度 · 突出正文 ─── */
+.notes-box{padding:0!important;border-radius:0!important;background:transparent!important;border:0!important;position:relative;margin-left:7px;padding-left:20px!important}
+.notes-box::before{content:"";position:absolute;left:0;top:6px;bottom:6px;width:2px;background:var(--line)}
+.notes-stack{display:block!important}
+.note-card,
+[data-theme] .note-card{min-height:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;padding:11px 2px 13px 0!important;border-bottom:1px solid var(--line)!important;position:relative;margin:0!important}
+.note-card::before{content:"";position:absolute;left:-25px;top:15px;width:9px;height:9px;border-radius:50%;background:var(--acc);box-shadow:0 0 0 3px var(--bg)}
+.note-card.s-漂移::before{background:var(--st-drift)}
+.note-card.s-干扰::before{background:var(--st-noise)}
+.note-card.s-接管::before{background:var(--st-chaos)}
+.note-card:hover{background:transparent!important;transform:none!important}
+.nc-top{display:flex;align-items:center;gap:10px;margin-bottom:5px!important}
+.nc-tk{background:transparent!important;border:0!important;padding:0!important;color:var(--gold)!important;font-family:var(--mono);font-weight:700;font-size:12.5px;letter-spacing:.04em}
+.nc-meta{font-family:var(--mono);font-size:10px;color:var(--tf);letter-spacing:.04em}
+.nc-title{font-size:16px!important;line-height:1.45!important;color:var(--ink)!important;font-weight:600!important;margin:0 0 7px!important;font-family:var(--serif)}
+.nc-div{display:none!important}
+.nc-cols{display:flex!important;gap:18px!important;align-items:baseline;margin:0!important}
+.nc-col{display:flex!important;align-items:baseline;gap:6px;min-height:0!important}
+.nc-col label{font-family:var(--mono);font-size:9px!important;letter-spacing:.12em;color:var(--tf)!important;text-transform:uppercase}
+.nc-col b{font-family:var(--mono);font-size:11.5px!important;color:var(--ink-2)!important;font-weight:600}
+.note-card-del{opacity:0;transition:opacity .15s;color:var(--tf)!important}
+.note-card:hover .note-card-del{opacity:.6}
+.note-card-toggle{margin-top:8px!important;font-size:10.5px!important;color:var(--mut)!important;background:transparent!important;border:0!important;padding:0!important}
+
+/* — 贴便条弹窗: 限高内滚 · 压紧 (桌面不再溢出截断) — */
+.note-modal{padding:24px 20px!important;align-items:flex-start!important}
+.note-modal-card{max-width:480px!important;max-height:calc(100vh - 48px)!important;overflow-y:auto!important;padding:20px!important;margin:auto!important}
+.note-modal-head{margin-bottom:12px!important}
+.note-types,.note-prio,.note-qp,.note-memo-wrap,.note-micro{margin-bottom:12px!important}
+.note-prio{margin-top:0!important}
+.note-type-btn,.note-prio-btn{min-height:42px!important}
+.nm-opt{min-height:44px!important}
+.note-memo-wrap textarea{min-height:56px!important}
+.note-micro{padding:12px 12px 4px!important}
+/* ═══════════════════════════════════════════════════════════════════════ */
 </style>
 </head>
 <body>
