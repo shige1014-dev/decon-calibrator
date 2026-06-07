@@ -1,10 +1,15 @@
 {
   "name": "股票日记 · STOCK JOURNAL",
   "short_name": "股票日记",
-  "description": "7 题心境快照 + 一句话理由 · 把每一次买入的初衷封进时间胶囊",
+  "description": "10 题心境快照 + 一句话理由 · 把每一次买入的初衷封进时间胶囊",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0E1318",
-  "theme_color": "#0E1318",
-  "icons": []
+  "background_color": "#0B0B0C",
+  "theme_color": "#08191A",
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-192-maskable.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "/icons/icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
 }
