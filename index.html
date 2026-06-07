@@ -1632,11 +1632,8 @@ html,body{overflow-x:hidden;max-width:100%}
     <!-- step 4 -->
     <div class="wiz-step" id="step4">
       <div class="rs">
-        <div class="rs-lab">CURRENT STATE · 当前心境</div>
-        <div class="rs-state" id="rsState">—</div>
-        <div class="rs-en" id="rsEn">—</div>
-        <p class="rs-meaning" id="rsMeaning">—</p>
-        <div class="rs-score"><b id="rsScore">0</b> / 30 分</div>
+        <div class="rs-lab">SNAPSHOT · 判断已封存</div>
+        <h2 class="wiz-h" style="margin-bottom:18px">把这一刻的判断 · 封进时间胶囊</h2>
         <div class="rs-snap" id="rsSnap"></div>
         <div class="cta-row">
           <button class="btn primary big" id="saveEntry">保存到日记本 ↗</button>
@@ -1657,8 +1654,6 @@ html,body{overflow-x:hidden;max-width:100%}
     </div>
     <h1 class="bk-name" id="bkName">—</h1>
     <div class="bk-price" id="bkPrice"></div>
-    <div class="bk-trend-lab">心境轨迹 · 最早 → 最新</div>
-    <div class="bk-trend" id="bkTrend"></div>
   </div>
   <div class="entries" id="bkEntries"></div>
 </section>
@@ -2562,9 +2557,7 @@ function renderQuestion(){
     });
   });
 }
-document.getElementById("qBack").addEventListener("click",()=>{
-  if(WIZ.curQ > 0){ WIZ.curQ--; renderQuestion(); }
-});
+// (旧 10 题 qBack 监听已移除 · step3 改为周期+信心无返回按钮)
 
 // step 4 · result
 function renderResult(){
@@ -2574,11 +2567,6 @@ function renderResult(){
   WIZ._score = score;
   WIZ._state = state;
   const hz = WIZ.horizon === "short" ? "短期股" : "长期股";
-  document.getElementById("rsState").textContent = state;
-  document.getElementById("rsState").className = "rs-state s-"+state;
-  document.getElementById("rsEn").textContent = STATE_DEFS[state].en;
-  document.getElementById("rsMeaning").textContent = STATE_DEFS[state].desc;
-  document.getElementById("rsScore").textContent = score;
   document.getElementById("rsSnap").innerHTML = `
     <div>标的<b>${escapeHtml(WIZ.ticker)}</b></div>
     <div>持有周期<b>${hz}</b></div>
