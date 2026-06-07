@@ -693,17 +693,18 @@ footer.foot a:hover{color:var(--gold-b)}
   --on-accent:#06231B;
 }
 [data-theme="light"]{
-  --bg:#E1EDD4;--bg2:#F7FAF2;--bg3:#CAE5BC;--bg4:#AEE0C5;--panel:#F7FAF2;
-  --line:rgba(77,82,180,.14);--acc:#4D52B4;--acc-b:#3D429C;--acc-soft:rgba(77,82,180,.11);
-  --gold:#4D52B4;--gold-b:#3D429C;--cyan:#4E9CE8;--cyan-b:#347DC5;--lav:#D9D9F2;
-  --mint:#70D6C5;--forest:#397F78;--ink:#202A3A;--ink-2:#405269;--mut:#718297;--tf:#A8B8B2;
-  --ok:#267D72;--warn:#936B21;--neg:#B7483E;--pend:#80918B;
-  --st-clear:#267D72;--st-drift:#936B21;--st-noise:#B5632D;--st-chaos:#B7483E;
-  --shadow:0 20px 52px rgba(65,83,125,.14);
-  --surface-hero-a:#DCECD5;--surface-hero-b:#9DDED0;
-  --surface-stat-1:#4D52B4;--surface-stat-2:#F7FAF2;--surface-stat-3:#70D6C5;--surface-stat-4:#CAE5BC;
-  --surface-card-1:#F7FAF2;--surface-card-2:#D9EAF4;--surface-card-3:#D5EFE8;--surface-card-4:#E4E3F3;
-  --surface-detail-a:#D7EAF0;--surface-detail-b:#A8DED1;--surface-thesis:#D5EBE3;
+  /* ASTRO · 暖奶白 + 单一橙 · 主色统一 */
+  --bg:#F4EEE3;--bg2:#FBF7F0;--bg3:#EFE7D8;--bg4:#E7DBC8;--panel:#FBF7F0;
+  --line:rgba(58,48,38,.14);--acc:#E8642A;--acc-b:#CC4F18;--acc-soft:rgba(232,100,42,.10);
+  --gold:#E8642A;--gold-b:#CC4F18;--cyan:#C98A3E;--cyan-b:#A86E28;--lav:#E9DECB;
+  --mint:#C98A3E;--forest:#9A6A2E;--ink:#272019;--ink-2:#4A3F32;--mut:#8A7B66;--tf:#B6A88F;
+  --ok:#5E8C5A;--warn:#C98A3E;--neg:#C0492B;--pend:#9A8E78;
+  --st-clear:#5E8C5A;--st-drift:#C98A3E;--st-noise:#D2691E;--st-chaos:#C0492B;
+  --shadow:0 18px 46px rgba(120,90,50,.12);
+  --surface-hero-a:#F0E7D7;--surface-hero-b:#EADCC2;
+  --surface-stat-1:#E8642A;--surface-stat-2:#FBF7F0;--surface-stat-3:#EFE7D8;--surface-stat-4:#F2E9D8;
+  --surface-card-1:#FBF7F0;--surface-card-2:#F4ECDD;--surface-card-3:#F6EFE2;--surface-card-4:#F0E6D4;
+  --surface-detail-a:#F4ECDD;--surface-detail-b:#EADCC2;--surface-thesis:#F3EADB;
   --on-accent:#FFFFFF;
 }
 [data-theme="color"]{
@@ -940,15 +941,15 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{
 html[data-theme="light"],[data-theme="light"] body{background-color:var(--bg)}
 [data-theme="light"] body{
   background:
-    radial-gradient(840px 500px at 88% -4%,rgba(78,156,232,.24),transparent 66%),
-    radial-gradient(680px 440px at -6% 55%,rgba(112,214,197,.20),transparent 68%),
-    linear-gradient(rgba(77,82,180,.026) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(77,82,180,.026) 1px,transparent 1px),
+    radial-gradient(840px 500px at 88% -4%,rgba(232,100,42,.16),transparent 66%),
+    radial-gradient(680px 440px at -6% 55%,rgba(201,138,62,.12),transparent 68%),
+    linear-gradient(rgba(58,48,38,.030) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(58,48,38,.030) 1px,transparent 1px),
     var(--bg);
   background-size:auto,auto,34px 34px,34px 34px,auto;
 }
-[data-theme="light"] body::before{background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(77,82,180,.025))}
-[data-theme="light"] .topbar{background:rgba(247,250,242,.88);border-color:rgba(77,82,180,.14)}
+[data-theme="light"] body::before{background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(232,100,42,.020))}
+[data-theme="light"] .topbar{background:rgba(247,250,242,.88);border-color:rgba(120,80,45,.14)}
 [data-theme="light"] .tb-search,
 [data-theme="light"] .settings-btn,
 [data-theme="light"] .theme-btn,
@@ -957,13 +958,13 @@ html[data-theme="light"],[data-theme="light"] body{background-color:var(--bg)}
 [data-theme="light"] .note-prio-btn,
 [data-theme="light"] .q-opt,
 [data-theme="light"] .rs-meaning,
-[data-theme="light"] .rs-snap div{background:rgba(77,82,180,.06)}
+[data-theme="light"] .rs-snap div{background:rgba(120,80,45,.06)}
 [data-theme="light"] .hero{color:var(--ink)}
 [data-theme="light"] .h-sub,[data-theme="light"] .bk-sector{color:var(--ink-2)}
 [data-theme="light"] .book-card{box-shadow:0 14px 36px rgba(65,83,125,.10)}
 [data-theme="light"] .bc-state,
-[data-theme="light"] .bc-tag{background:rgba(77,82,180,.08)}
-[data-theme="light"] .book-card::after{border-color:rgba(77,82,180,.11)}
+[data-theme="light"] .bc-tag{background:rgba(120,80,45,.08)}
+[data-theme="light"] .book-card::after{border-color:rgba(120,80,45,.11)}
 [data-theme="light"] .wiz-step,
 [data-theme="light"] .notes-box{background:rgba(247,250,242,.84)}
 [data-theme="light"] .theme-pop,
@@ -973,8 +974,8 @@ html[data-theme="light"],[data-theme="light"] body{background-color:var(--bg)}
 [data-theme="light"] .note-modal{background:rgba(32,42,58,.32)}
 [data-theme="light"] .entry-memo-big,
 [data-theme="light"] .entry-detail,
-[data-theme="light"] .note-micro{background:rgba(77,82,180,.055)}
-[data-theme="light"] .bk-trend{background:rgba(77,82,180,.09)}
+[data-theme="light"] .note-micro{background:rgba(120,80,45,.055)}
+[data-theme="light"] .bk-trend{background:rgba(120,80,45,.09)}
 [data-theme="light"] .bs-cell:nth-child(3n+1){background:#D9EAF4}
 [data-theme="light"] .bs-cell:nth-child(3n+2){background:#D5EFE8}
 [data-theme="light"] .bs-cell:nth-child(3n+3){background:#E4E3F3}
@@ -1135,12 +1136,12 @@ html[data-theme="color"]{background:#222A2A}
 .note-card-micro{margin-top:8px;padding:9px 10px 2px;border:0;border-radius:10px;background:var(--acc-soft)}
 
 [data-theme="light"] .note-card{
-  background:#F7FAF2;border-color:rgba(77,82,180,.12);
+  background:#F7FAF2;border-color:rgba(120,80,45,.12);
   box-shadow:0 8px 22px rgba(65,83,125,.08)
 }
 [data-theme="light"] .nc-tk,
-[data-theme="light"] .note-card-toggle{background:rgba(77,82,180,.09);color:#4D52B4}
-[data-theme="light"] .note-card-micro{background:rgba(77,82,180,.055)}
+[data-theme="light"] .note-card-toggle{background:rgba(120,80,45,.09);color:#4D52B4}
+[data-theme="light"] .note-card-micro{background:rgba(120,80,45,.055)}
 
 [data-theme="color"] .note-card{
   background:#2B3433;border-color:rgba(243,145,32,.16);
@@ -1241,6 +1242,11 @@ html[data-theme="color"]{background:#222A2A}
 /* ═══════════════ v2 · 一致性收口 + 高密度去框 (2026-06-07) ═══════════════
    铁律: 主色统治 · 强调色(金)只做小面积亮点 · 细线分隔替代填充框 · 压缩留白
    结构层(var 驱动 · 三主题通用) — 颜色一致性由各主题 token 保证             */
+
+/* — DEMO 横幅: 去硬编码深蓝/cyan → 主题感知细线幽灵条 — */
+.demo-banner{background:var(--acc-soft)!important;border:1px dashed var(--acc)!important;border-radius:10px!important;color:var(--acc)!important}
+.demo-banner b,.demo-banner button{color:var(--acc)!important;border-color:var(--acc)!important}
+.demo-banner button:hover{background:var(--acc-soft)!important}
 
 /* — 顶栏: 去浮窗 → 贴顶全宽扁平栏 — */
 .topbar{position:sticky;top:0;margin:0!important;max-width:none!important;width:100%;border-radius:0!important;padding:9px 20px!important;border:0!important;border-bottom:1px solid var(--line)!important;box-shadow:none!important;background:color-mix(in srgb, var(--bg) 88%, transparent)!important;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
