@@ -1875,7 +1875,7 @@ document.getElementById("prinForm").addEventListener("submit", e => {
   const inp = document.getElementById("prinInput"); const t = inp.value.trim();
   if(!t) return;
   const d = logStore(); d.principles.push({ id: uid(), text: t, ts: Date.now() }); save(d);
-  inp.value = ""; renderLog();
+  inp.value = ""; renderLog(); inp.focus();
 });
 document.getElementById("lessonForm").addEventListener("submit", e => {
   e.preventDefault();
@@ -1883,7 +1883,7 @@ document.getElementById("lessonForm").addEventListener("submit", e => {
   if(!t) return;
   const date = document.getElementById("lessonDate").value || todayStr();
   const d = logStore(); d.lessons.push({ id: uid(), date, text: t, ts: Date.now() }); save(d);
-  inp.value = ""; renderLog();
+  inp.value = ""; renderLog(); inp.focus();
 });
 
 // ============================================================
