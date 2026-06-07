@@ -22,6 +22,7 @@
 <meta name="theme-color" content="#08191A">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="股票日记">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>try{
   var t = localStorage.getItem('journal_theme');
   var themeMap = { lime:'dark', paper:'light', cartoon:'color' };
@@ -1284,6 +1285,8 @@ html[data-theme="color"]{background:#222A2A}
 .bc-del{position:absolute;top:5px;right:5px;z-index:5;width:32px;height:32px;display:grid;place-items:center;padding:0;border:0;background:transparent;font-size:0;cursor:pointer;opacity:.7;transition:opacity .15s,transform .12s}
 .bc-del::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--neg)}
 .bc-del:hover,.bc-del:active{opacity:1;transform:scale(1.15)}
+/* DEMO 徽章冗余(顶部已有横幅) → 隐藏, 避免与删除红点重叠 */
+.book-card.demo::before{display:none!important}
 /* 股票代码加粗 */
 .bc-tk,.bk-tk,.nc-tk{font-weight:900!important;letter-spacing:.04em}
 /* — 批量管理删除模式 — */
@@ -1371,7 +1374,17 @@ html[data-theme="color"]{background:#222A2A}
 .nmood-btn:active{transform:scale(.93)}
 .nmood-btn.on{border-color:var(--acc);background:var(--acc-soft);filter:none;transform:scale(1.05)}
 .nc-mood{font-size:15px;line-height:1;margin-right:1px}
-.nc-dot{width:9px;height:9px;border-radius:50%;flex:none;display:inline-block}
+/* 云同步登录弹窗 */
+.auth-intro{font-size:13px;color:var(--mut);line-height:1.6;margin-bottom:16px}
+.auth-field{margin-bottom:14px}
+.auth-field label{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;color:var(--mut);text-transform:uppercase;margin-bottom:6px}
+.auth-field label em{font-style:normal;color:var(--tf);text-transform:none;letter-spacing:0;margin-left:4px}
+.auth-field input{width:100%;background:transparent;border:0;border-bottom:1px solid var(--line);padding:9px 2px;color:var(--ink);font-family:var(--sans);font-size:15px;outline:none;transition:border-color .15s}
+.auth-field input:focus{border-bottom-color:var(--acc)}
+.auth-msg{min-height:18px;font-size:12px;line-height:1.5;margin:4px 0 12px}
+.auth-msg.err{color:var(--neg)} .auth-msg.ok{color:var(--acc)}
+.auth-actions{display:flex;gap:10px;flex-wrap:wrap}
+.auth-actions .btn{flex:1;min-width:120px;justify-content:center}
 /* — 向导 step3: 持有周期 + 信心 (取代10题) — */
 .wiz-horizon{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:18px 0 24px}
 .wh-btn{padding:16px;border:1px solid var(--line);border-radius:14px;background:transparent;cursor:pointer;text-align:left;transition:border-color .15s,background .15s,transform .12s}
@@ -1535,11 +1548,31 @@ html,body{overflow-x:hidden;max-width:100%}
 </div>
 
 <div class="settings-pop" id="settingsPop">
+  <div class="sp-head">云同步 · CLOUD</div>
+  <button class="sp-item" id="spAuth"><span id="spAuthLabel">☁ 登录 / 注册</span><em id="spAuthHint">跨设备同步 · 防丢</em></button>
   <div class="sp-head">数据 · BACKUP</div>
   <button class="sp-item" id="spExport"><span>📤 导出 JSON</span><em>下载备份</em></button>
   <button class="sp-item" id="spImport"><span>📥 导入 JSON</span><em>合并恢复</em></button>
   <button class="sp-item danger" id="spClear"><span>🗑 清空所有数据</span><em>不可撤销</em></button>
   <input type="file" id="spImportFile" accept="application/json" style="display:none">
+</div>
+
+<!-- 云同步 · 登录/注册弹窗 -->
+<div class="note-modal" id="authModal" role="dialog" aria-modal="true">
+  <div class="note-modal-card" style="max-width:380px">
+    <div class="note-modal-head">
+      <div class="note-modal-h">云同步 · 登录</div>
+      <button class="note-modal-close" id="authClose" type="button">✕</button>
+    </div>
+    <p class="auth-intro">登录后数据存云端 · 换设备登录即同步 · 不怕 7 天清缓存。</p>
+    <div class="auth-field"><label>邮箱</label><input id="authEmail" type="email" autocomplete="email" placeholder="you@mail.com"></div>
+    <div class="auth-field"><label>密码 <em>≥ 6 位</em></label><input id="authPwd" type="password" autocomplete="current-password" placeholder="••••••"></div>
+    <div class="auth-msg" id="authMsg"></div>
+    <div class="auth-actions">
+      <button class="btn primary" id="authLogin" type="button">登录</button>
+      <button class="btn" id="authRegister" type="button">注册新账号</button>
+    </div>
+  </div>
 </div>
 
 <main class="wrap">
@@ -1898,6 +1931,7 @@ function renderTagChips(tags, opts){
   }).join("") + `</span>`;
 }
 
+var sb = null, sbUser = null, pushTimer = null;   // 云同步状态(顶部声明避免 TDZ)
 const STORE_KEY = "journal_v1";
 const DEMO_FLAG = "journal_v1_demo_seen";
 const DRAFT_KEY = "journal_v1_wiz_draft";
@@ -1911,7 +1945,7 @@ const ENTRY_TYPES = {
 };
 
 function load(){ try{ return JSON.parse(localStorage.getItem(STORE_KEY)) || { books:{} }; }catch{ return { books:{} }; } }
-function save(d){ localStorage.setItem(STORE_KEY, JSON.stringify(d)); }
+function save(d){ localStorage.setItem(STORE_KEY, JSON.stringify(d)); if(typeof schedulePush === "function") schedulePush(); }
 function uid(){ return (crypto.randomUUID ? crypto.randomUUID() : String(Date.now())); }
 
 // demo seed · 第一次访问且没数据时注入示例
@@ -3155,8 +3189,81 @@ document.addEventListener("click",(e)=>{
 // ============================================================
 function escapeHtml(s){ return String(s ?? "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
 
+// ============================================================
+// 云同步 · Supabase 登录 + journals 表
+// ============================================================
+const SB_URL = "https://qvjbestswnqjwuvncwqr.supabase.co";
+const SB_KEY = "sb_publishable_I0ZF2z-tceUTjixBw0Q-Ug_tQ-Nhdaf";
+function schedulePush(){ if(!sb || !sbUser) return; clearTimeout(pushTimer); pushTimer = setTimeout(pushCloud, 1200); }
+async function pushCloud(){
+  if(!sb || !sbUser) return;
+  try{
+    const { error } = await sb.from("journals").upsert({ user_id: sbUser.id, data: load(), updated_at: new Date().toISOString() });
+    if(error) console.warn("push", error.message);
+  }catch(e){ console.warn("push", e.message); }
+}
+async function pullCloud(){
+  if(!sb || !sbUser) return;
+  try{
+    const { data, error } = await sb.from("journals").select("data").eq("user_id", sbUser.id).maybeSingle();
+    if(error){ console.warn("pull", error.message); return; }
+    if(data && data.data && Object.keys(data.data).length){
+      localStorage.setItem(STORE_KEY, JSON.stringify(data.data));   // 云端有 → 覆盖本地
+      route();
+    } else {
+      await pushCloud();                                            // 云端空 → 推本地上去
+    }
+  }catch(e){ console.warn("pull", e.message); }
+}
+function updateAuthUI(){
+  const lab = document.getElementById("spAuthLabel"), hint = document.getElementById("spAuthHint");
+  if(!lab) return;
+  if(sbUser){ lab.textContent = "☁ 已同步 · 退出登录"; hint.textContent = (sbUser.email || "").slice(0,24); }
+  else { lab.textContent = "☁ 登录 / 注册"; hint.textContent = "跨设备同步 · 防丢"; }
+}
+function openAuth(){ document.getElementById("authModal").classList.add("show"); document.getElementById("settingsPop").classList.remove("show"); }
+function closeAuth(){ document.getElementById("authModal").classList.remove("show"); }
+function authMsg(t, ok){ const m = document.getElementById("authMsg"); m.textContent = t; m.className = "auth-msg" + (ok ? " ok" : t ? " err" : ""); }
+
+function initSupabase(){
+  if(!window.supabase){ console.warn("supabase-js 未加载"); return; }
+  sb = window.supabase.createClient(SB_URL, SB_KEY);
+  sb.auth.getSession().then(({ data })=>{ if(data.session){ sbUser = data.session.user; pullCloud(); } updateAuthUI(); });
+  sb.auth.onAuthStateChange((_e, session)=>{ sbUser = session?.user || null; updateAuthUI(); });
+
+  document.getElementById("spAuth").addEventListener("click", async ()=>{
+    if(sbUser){ if(confirm("退出登录？本地数据保留,云端不再同步。")){ await sb.auth.signOut(); sbUser = null; updateAuthUI(); document.getElementById("settingsPop").classList.remove("show"); } }
+    else openAuth();
+  });
+  document.getElementById("authClose").addEventListener("click", closeAuth);
+  document.getElementById("authModal").addEventListener("click",(e)=>{ if(e.target.id === "authModal") closeAuth(); });
+  document.getElementById("authLogin").addEventListener("click", ()=> doAuth("login"));
+  document.getElementById("authRegister").addEventListener("click", ()=> doAuth("register"));
+}
+async function doAuth(mode){
+  const email = document.getElementById("authEmail").value.trim();
+  const pwd = document.getElementById("authPwd").value;
+  if(!email || pwd.length < 6){ authMsg("邮箱 + 至少 6 位密码", false); return; }
+  authMsg("处理中…", true);
+  try{
+    if(mode === "register"){
+      const { error } = await sb.auth.signUp({ email, password: pwd });
+      if(error){ authMsg(error.message, false); return; }
+      authMsg("注册成功 · 正在登录…", true);
+    }
+    const { data, error } = await sb.auth.signInWithPassword({ email, password: pwd });
+    if(error){ authMsg(mode === "register" ? "已注册 · 若需邮箱验证请查收邮件" : error.message, false); return; }
+    sbUser = data.user;
+    authMsg("登录成功 · 同步中…", true);
+    await pullCloud();
+    updateAuthUI();
+    setTimeout(closeAuth, 600);
+  }catch(e){ authMsg(e.message, false); }
+}
+
 // boot
 route();
+try{ initSupabase(); }catch(e){ console.warn("supabase init", e.message); }
 </script>
 </body>
 </html>
