@@ -1410,6 +1410,30 @@ html{scroll-behavior:smooth}
 .wisdom-t{font-family:var(--serif);font-size:17px;line-height:1.65;color:var(--ink);max-width:660px;margin-top:8px;text-wrap:pretty}
 .wisdom-a{font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--gold);margin-top:9px}
 .wisdom:hover .wisdom-t{color:var(--gold-b)}
+/* — 凯利仓位计算器 视觉化 — */
+.kelly{max-width:640px}
+.k-input{margin-bottom:22px}
+.k-input label{display:flex;justify-content:space-between;align-items:baseline;font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--mut);text-transform:uppercase;margin-bottom:10px}
+.k-input label b{font-family:var(--mono);font-size:18px;color:var(--gold);letter-spacing:0}
+.k-input input[type=range]{width:100%;accent-color:var(--acc);height:4px;cursor:pointer}
+.k-bar{margin:10px 0 28px}
+.kb-track{position:relative;height:30px;border:1px solid var(--line);border-radius:8px;background:linear-gradient(90deg,var(--acc-soft),transparent)}
+.kb-fill{position:absolute;left:0;top:0;bottom:0;background:var(--acc);opacity:.8;border-radius:7px 0 0 7px;transition:width .2s}
+.kb-mark{position:absolute;top:-5px;bottom:-5px;border-left:2px dashed var(--gold);transition:left .2s}
+.kb-mark.full{border-left-color:var(--neg)}
+.kb-mark.rule{border-left:2px solid var(--ink-2);opacity:.55}
+.kb-mark em{position:absolute;top:-15px;left:3px;font-style:normal;font-family:var(--mono);font-size:9px;color:var(--gold);white-space:nowrap}
+.kb-mark.full em{color:var(--neg)}
+.kb-mark.rule em{color:var(--ink-2);left:auto;right:3px}
+.kb-scale{display:flex;justify-content:space-between;margin-top:9px;font-family:var(--mono);font-size:9px;letter-spacing:.1em;color:var(--tf)}
+.k-out{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-bottom:16px}
+.ko-cell{padding:14px;border-right:1px solid var(--line);text-align:center}
+.ko-cell:last-child{border-right:0}
+.ko-cell label{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:var(--mut);text-transform:uppercase;margin-bottom:6px}
+.ko-cell b{font-family:var(--mono);font-size:24px;color:var(--ink-2);font-weight:700;font-variant-numeric:tabular-nums}
+.ko-cell.rec b{color:var(--acc)}
+.k-verdict{font-family:var(--serif);font-size:15px;line-height:1.6;color:var(--ink);padding-left:14px;border-left:2px solid var(--gold);margin:0}
+@media(max-width:640px){ .ko-cell b{font-size:19px} .ko-cell{padding:12px 5px} }
 /* 首页原则: 双列高密度 · 只读 · 编号降为柔和(不金) */
 .home-prin{display:grid;grid-template-columns:1fr 1fr;gap:0 34px;margin-bottom:4px}
 .home-prin .prin-item{padding:9px 0}
@@ -1461,6 +1485,7 @@ html,body{overflow-x:hidden;max-width:100%}
 <header class="topbar">
   <a class="brand" href="#/"><span class="mk">⌗</span> 股票<b>日记</b></a>
   <div class="tb-right">
+    <a class="settings-btn" href="#/kelly" id="btnKelly" title="凯利仓位计算器">📐</a>
     <a class="settings-btn" href="#/log" id="btnLog" title="经验台 · 原则 + 经验日记">📔</a>
     <button class="settings-btn" id="btnSettings" title="设置 · 备份">⚙</button>
     <button class="theme-btn" id="btnTheme" title="配色主题"><span class="theme-dot" id="themeDot"></span></button>
@@ -1630,6 +1655,41 @@ html,body{overflow-x:hidden;max-width:100%}
     <textarea id="lessonInput" placeholder="今天学到 / 想明白了什么 · 一段话写下来…" rows="3" maxlength="1200"></textarea>
   </form>
   <div class="notes-box" id="lessonList"></div>
+</section>
+
+<!-- KELLY · 凯利仓位计算器 -->
+<section id="view-kelly" class="view" style="display:none">
+  <div class="hero log-hero">
+    <div class="h-eyebrow">ZERO2076 · POSITION SIZING · 凯利公式</div>
+    <h1 class="h-title">凯利仓位<em>KELLY CRITERION</em></h1>
+    <p class="h-sub">下注比例 = 胜率 − 败率 ÷ 赔率。它给的是 <b>上限刹车</b> · 不是目标 —— 实战只用 1/4 ~ 1/2。</p>
+  </div>
+
+  <div class="kelly">
+    <div class="k-input">
+      <label>胜率 p <b id="kpV">60%</b></label>
+      <input type="range" id="kp" min="5" max="95" value="60" step="1">
+    </div>
+    <div class="k-input">
+      <label>赔率 b · 赢能赚 ÷ 输会亏 <b id="kbV">2.0</b></label>
+      <input type="range" id="kb" min="2" max="60" value="20" step="1">
+    </div>
+    <div class="k-bar">
+      <div class="kb-track">
+        <div class="kb-fill" id="kFill"></div>
+        <span class="kb-mark rule" style="left:15%"><em>原则 15%</em></span>
+        <span class="kb-mark" id="kMarkHalf"><em>½</em></span>
+        <span class="kb-mark full" id="kMarkFull"><em>满</em></span>
+      </div>
+      <div class="kb-scale"><span>0</span><span>25%</span><span>50%</span><span>75%</span><span>满仓</span></div>
+    </div>
+    <div class="k-out">
+      <div class="ko-cell"><label>满凯利 · 别用</label><b id="kFull">—</b></div>
+      <div class="ko-cell"><label>½ 凯利</label><b id="kHalf">—</b></div>
+      <div class="ko-cell rec"><label>¼ 凯利 · 推荐</label><b id="kQuarter">—</b></div>
+    </div>
+    <p class="k-verdict" id="kVerdict"></p>
+  </div>
 </section>
 
 </main>
@@ -1859,11 +1919,12 @@ function scoreToState(s){
 // ============================================================
 function route(){
   const h = location.hash.slice(1) || "/";
-  const views = ["home","new","book","search","log"];
+  const views = ["home","new","book","search","log","kelly"];
   views.forEach(v => document.getElementById("view-"+v).style.display = "none");
 
   if(h === "/" || h === ""){ document.getElementById("view-home").style.display = "block"; renderHome(); }
   else if(h === "/log"){ document.getElementById("view-log").style.display = "block"; renderLog(); }
+  else if(h === "/kelly"){ document.getElementById("view-kelly").style.display = "block"; renderKelly(); }
   else if(h === "/new"){ document.getElementById("view-new").style.display = "block"; resetWizard(); }
   else if(h.startsWith("/book/")){
     document.getElementById("view-book").style.display = "block";
@@ -1931,6 +1992,36 @@ document.getElementById("lessonForm").addEventListener("submit", e => {
   const d = logStore(); d.lessons.push({ id: uid(), date, text: t, ts: Date.now() }); save(d);
   inp.value = ""; renderLog(); inp.focus();
 });
+
+// ============================================================
+// 凯利仓位计算器 · 视觉化
+// ============================================================
+function renderKelly(){
+  const kp = document.getElementById("kp"), kb = document.getElementById("kb");
+  if(!kp || !kb) return;
+  const pct = x => Math.round(x * 100) + "%";
+  const calc = ()=>{
+    const p = (+kp.value) / 100;
+    const b = (+kb.value) / 10;                 // slider 2-60 → 0.2-6.0
+    document.getElementById("kpV").textContent = Math.round(p * 100) + "%";
+    document.getElementById("kbV").textContent = b.toFixed(1);
+    let f = p - (1 - p) / b;                     // 满凯利比例
+    if(f < 0) f = 0;
+    const half = f / 2, q = f / 4;
+    document.getElementById("kFull").textContent = pct(f);
+    document.getElementById("kHalf").textContent = pct(half);
+    document.getElementById("kQuarter").textContent = pct(q);
+    document.getElementById("kFill").style.width = Math.min(q * 100, 100) + "%";
+    document.getElementById("kMarkHalf").style.left = Math.min(half * 100, 100) + "%";
+    document.getElementById("kMarkFull").style.left = Math.min(f * 100, 100) + "%";
+    let v;
+    if(f <= 0) v = "⚠ 没有正期望 —— 这笔不该下注。胜率太低或赔率太差,公式直接判 0。";
+    else if(q * 100 > 15) v = `推荐 ¼ 凯利 = ${pct(q)} · 已超你 15% 原则线 → 按原则压到 15% 封顶。`;
+    else v = `推荐 ¼ 凯利 = ${pct(q)} · 在你 15% 原则内 → 可执行。`;
+    document.getElementById("kVerdict").textContent = v;
+  };
+  kp.oninput = calc; kb.oninput = calc; calc();
+}
 
 // ============================================================
 // HOME · 笔记墙 (个股本)
@@ -2652,7 +2743,6 @@ function entryHtml(e, tk, livePrice){
         </div>
         <div class="esf-actions">
           <button data-toggle="${e.id}">▸ 看 10 题</button>
-          <button class="danger" data-del="${e.id}">删除</button>
         </div>
       </div>
       <div class="entry-detail" id="ed-${e.id}" style="margin-top:14px">
