@@ -2756,7 +2756,6 @@ function entryHtml(e, tk, livePrice){
         ${priceLine}
       </div>
       <div class="entry-memo-big">${escapeHtml(e.memo || "—")}</div>
-      ${tags.length ? `<div class="entry-tags-line">${renderTagChips(tags)}</div>` : ""}
       <div class="entry-state-foot">
         <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
           <span class="esf-st s-${e.state}">${e.state} · ${e.score}/30</span>
