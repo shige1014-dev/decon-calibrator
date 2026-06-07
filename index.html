@@ -1359,6 +1359,14 @@ html[data-theme="color"]{background:#222A2A}
 .nm-opt{min-height:44px!important}
 .note-memo-wrap textarea{min-height:56px!important}
 .note-micro{padding:12px 12px 4px!important}
+/* — 心情 emoji 选择 — */
+.note-mood{display:flex;align-items:center;gap:8px;margin-bottom:12px!important;flex-wrap:wrap}
+.nmood-lab{font-family:var(--mono);font-size:9.5px;letter-spacing:.22em;color:var(--mut);text-transform:uppercase;margin-right:2px}
+.nmood-btn{width:46px;height:46px;border:1px solid var(--line);background:transparent;border-radius:13px;font-size:23px;line-height:1;cursor:pointer;display:grid;place-items:center;transition:border-color .15s,transform .12s,background .15s,filter .15s;filter:grayscale(.45) opacity(.65)}
+.nmood-btn:hover{border-color:var(--gold)}
+.nmood-btn:active{transform:scale(.93)}
+.nmood-btn.on{border-color:var(--acc);background:var(--acc-soft);filter:none;transform:scale(1.05)}
+.nc-mood{font-size:15px;line-height:1;margin-right:1px}
 
 /* — 经验台: 原则编号列表 + 经验日记表单/时间线 — */
 /* hero 不喧宾夺主: 大标题块 → 细线 slim 头 */
@@ -1653,6 +1661,13 @@ html,body{overflow-x:hidden;max-width:100%}
       <label>一句话理由</label>
       <textarea id="noteMemo" maxlength="200" placeholder="今天加仓 50 股 · 因为..."></textarea>
     </div>
+    <div class="note-mood" id="noteMood">
+      <span class="nmood-lab">心情</span>
+      <button class="nmood-btn" type="button" data-mood="😄" title="欢乐">😄</button>
+      <button class="nmood-btn" type="button" data-mood="😠" title="生气">😠</button>
+      <button class="nmood-btn" type="button" data-mood="😭" title="哭泣">😭</button>
+      <button class="nmood-btn" type="button" data-mood="😌" title="平静">😌</button>
+    </div>
     <div class="note-micro" id="noteMicro">
       <div class="nm-head">此刻心境 · 3 题快检 <em>下次回看 · 你能看清这一下是清醒还是被牵着走</em></div>
       <div class="nm-qs" id="nmQs"></div>
@@ -1705,13 +1720,20 @@ const QUESTIONS = [
 ];
 const SCORE = { A:3, B:2, C:1, D:0 };
 
-// 便条快检 · 3 题高信号子集 (反证 / 看价 / 声音) · 复用 QUESTIONS
-const MICRO_IDX = [1, 4, 5];
+// 便条快检 · 3 题专属直观题 (观点 / 看好 / 初衷) · A 清醒 → D 高风险
+const MICRO_QUESTIONS = [
+  { h:"你的观点变了吗？", short:"观点",
+    opts:["没变 · 事实支撑还在","微调 · 核心逻辑没动","有点动摇 · 说不太清","全变了 · 跟着价格走"] },
+  { h:"你还长期看好它吗？", short:"看好",
+    opts:["是 · 长逻辑没破","大体看好 · 留意变化","不确定了 · 在犹豫","已经不信 · 但还拿着"] },
+  { h:"当初买它的初衷 · 还记得吗？", short:"初衷",
+    opts:["记得 · 现在还成立","记得 · 但部分变了","模糊了","忘了 · 现在只看价"] },
+];
 // 3 题 raw 0-9 → 归一化到 /30 → 复用 scoreToState · 便条与 thesis 同一套心境刻度
 function microState(micro){
-  if(!micro || micro.length < MICRO_IDX.length || micro.some(a => !a)) return null;
+  if(!micro || micro.length < MICRO_QUESTIONS.length || micro.some(a => !a)) return null;
   const raw = micro.reduce((s,a)=> s + (SCORE[a] ?? 0), 0);   // 0-9
-  const score30 = Math.round(raw / (MICRO_IDX.length * 3) * 30);
+  const score30 = Math.round(raw / (MICRO_QUESTIONS.length * 3) * 30);
   return { raw, score: score30, state: scoreToState(score30) };
 }
 
@@ -2667,8 +2689,8 @@ function noteCardHtml(e, tk, livePrice){
   const OI = { A:0, B:1, C:2, D:3 };
   let microHtml = "";
   if(e.micro && e.micro.filter(Boolean).length){
-    const rows = MICRO_IDX.map((qi, mi)=>{
-      const q = QUESTIONS[qi]; const a = e.micro[mi];
+    const rows = MICRO_QUESTIONS.map((q, mi)=>{
+      const a = e.micro[mi];
       if(!a) return "";
       return `<div class="ncm-row"><span class="ncm-q">${escapeHtml(q.short || q.h)}</span><span class="ncm-a"><em>${a}</em> ${escapeHtml(q.opts[OI[a]] || "")}</span></div>`;
     }).join("");
@@ -2678,6 +2700,7 @@ function noteCardHtml(e, tk, livePrice){
     <div class="note-card ${sf}">
       <button class="note-card-del" data-note-del="${e.id}" title="删除">✕</button>
       <div class="nc-top">
+        ${e.mood ? `<span class="nc-mood">${e.mood}</span>` : ""}
         <span class="nc-tk">${escapeHtml(tk)}</span>
         <span class="nc-meta">${d}${e.time ? " · "+escapeHtml(e.time) : ""}</span>
       </div>
@@ -2723,6 +2746,7 @@ function openNoteModal(tk, book, livePrice, liveCurrency){
   document.getElementById("noteMemo").value = "";
   document.querySelectorAll("#noteTypes .note-type-btn").forEach(b => b.classList.toggle("on", b.dataset.t === "add"));
   document.querySelectorAll("#notePrio .note-prio-btn").forEach(b => b.classList.toggle("on", b.dataset.p === "normal"));
+  document.querySelectorAll("#noteMood .nmood-btn").forEach(b => b.classList.remove("on"));
   renderNoteMicro();
   document.getElementById("noteModal").classList.add("show");
   setTimeout(()=> document.getElementById("noteMemo").focus(), 50);
@@ -2730,8 +2754,7 @@ function openNoteModal(tk, book, livePrice, liveCurrency){
 // 3 题快检 · 全部平铺 · 点选即记 · 实时算心境
 function renderNoteMicro(){
   const wrap = document.getElementById("nmQs");
-  wrap.innerHTML = MICRO_IDX.map((qi, mi)=>{
-    const q = QUESTIONS[qi];
+  wrap.innerHTML = MICRO_QUESTIONS.map((q, mi)=>{
     return `<div class="nm-q" data-mi="${mi}">
       <div class="nm-q-text"><span class="nm-q-no">${mi+1}</span>${escapeHtml(q.h)}</div>
       <div class="nm-opts">${["A","B","C","D"].map((L,oi)=>
@@ -2774,6 +2797,7 @@ function saveNote(){
   const qty = parseFloat(document.getElementById("noteQty").value);
   const price = parseFloat(document.getElementById("notePrice").value);
   const memo = document.getElementById("noteMemo").value.trim();
+  const mood = document.querySelector("#noteMood .nmood-btn.on")?.dataset.mood || null;
   if(!memo){ alert("写一句话再贴"); return; }
   const micro = (NOTE_CTX.micro || []).slice();
   const ms = microState(micro);          // null = 未答完 3 题
@@ -2790,6 +2814,7 @@ function saveNote(){
     price: isNaN(price) ? livePrice : price,
     currency: liveCurrency || d.books[tk].currency || null,
     memo,
+    mood,                                // 😄😠😭😌 · 直观心情
     micro,                               // ["A","C","B"] · 回看可展开
     state: ms ? ms.state : null,
     score: ms ? ms.score : null,
@@ -2809,6 +2834,12 @@ document.getElementById("noteTypes").addEventListener("click", (e)=>{
 document.getElementById("notePrio").addEventListener("click", (e)=>{
   const btn = e.target.closest(".note-prio-btn"); if(!btn) return;
   document.querySelectorAll("#notePrio .note-prio-btn").forEach(x => x.classList.toggle("on", x === btn));
+});
+document.getElementById("noteMood").addEventListener("click", (e)=>{
+  const btn = e.target.closest(".nmood-btn"); if(!btn) return;
+  const wasOn = btn.classList.contains("on");
+  document.querySelectorAll("#noteMood .nmood-btn").forEach(x => x.classList.remove("on"));
+  if(!wasOn) btn.classList.add("on");   // 再点取消
 });
 
 // ============================================================
