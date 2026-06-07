@@ -1485,10 +1485,11 @@ html,body{overflow-x:hidden;max-width:100%}
   .book-stats{grid-template-columns:repeat(2,minmax(0,1fr))!important}
   .nc-cols{flex-wrap:wrap!important;gap:7px 14px!important}
   .bk-trend{flex-wrap:wrap}
-  /* 手机: 笔记墙标题换行, 选择删除按钮不被挤出屏 */
-  .wall-head{flex-wrap:wrap!important;gap:6px 10px}
-  .wall-head em{margin-left:auto}
-  .wall-manage{font-size:12px;padding:6px 13px}
+  /* 手机: 笔记墙标题/删除键拆两行, 按钮独占一行右对齐, 绝不出屏 */
+  .wall-head{flex-wrap:wrap!important;gap:4px 8px}
+  .wall-head>span{flex:1 1 100%}
+  .wall-head em{flex:1 1 100%;display:flex!important;align-items:center;gap:8px;margin:5px 0 0!important}
+  .wall-manage{margin-left:auto;font-size:12.5px;padding:8px 15px}
   .nc-title,.bc-memo,.entry-memo,.prin-text,.nc-meta{overflow-wrap:anywhere;word-break:break-word}
 }
 /* ═══════════════════════════════════════════════════════════════════════ */
