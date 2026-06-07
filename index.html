@@ -1369,6 +1369,20 @@ html[data-theme="color"]{background:#222A2A}
 .nmood-btn.on{border-color:var(--acc);background:var(--acc-soft);filter:none;transform:scale(1.05)}
 .nc-mood{font-size:15px;line-height:1;margin-right:1px}
 .nc-dot{width:9px;height:9px;border-radius:50%;flex:none;display:inline-block}
+/* — 向导 step3: 持有周期 + 信心 (取代10题) — */
+.wiz-horizon{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:18px 0 24px}
+.wh-btn{padding:16px;border:1px solid var(--line);border-radius:14px;background:transparent;cursor:pointer;text-align:left;transition:border-color .15s,background .15s,transform .12s}
+.wh-btn b{display:block;font-family:var(--serif);font-size:17px;color:var(--ink);margin-bottom:4px}
+.wh-btn span{font-family:var(--sans);font-size:12px;color:var(--mut);line-height:1.5}
+.wh-btn:hover{border-color:var(--gold)}
+.wh-btn:active{transform:scale(.98)}
+.wh-btn.on{border-color:var(--acc);background:var(--acc-soft)}
+.wh-btn.on b{color:var(--acc)}
+.wiz-conf{margin-bottom:24px}
+.wiz-conf label{display:flex;justify-content:space-between;align-items:baseline;font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--mut);text-transform:uppercase;margin-bottom:12px}
+.wiz-conf label b{font-family:var(--mono);font-size:22px;color:var(--gold);letter-spacing:0}
+.wiz-conf input[type=range]{width:100%;accent-color:var(--acc);height:4px;cursor:pointer}
+.wc-scale{display:flex;justify-content:space-between;margin-top:8px;font-family:var(--mono);font-size:9px;letter-spacing:.1em;color:var(--tf)}
 
 /* — 经验台: 原则编号列表 + 经验日记表单/时间线 — */
 /* hero 不喧宾夺主: 大标题块 → 细线 slim 头 */
@@ -1544,7 +1558,7 @@ html,body{overflow-x:hidden;max-width:100%}
     <div class="wiz-progress">
       <span class="wiz-dot on" id="dot1"></span><span>① 选股</span>
       <span class="wiz-dot" id="dot2"></span><span>② 一句话</span>
-      <span class="wiz-dot" id="dot3"></span><span>③ 10 题心境</span>
+      <span class="wiz-dot" id="dot3"></span><span>③ 周期 + 信心</span>
       <span class="wiz-dot" id="dot4"></span><span>④ 完成</span>
     </div>
 
@@ -1596,11 +1610,19 @@ html,body{overflow-x:hidden;max-width:100%}
 
     <!-- step 3 -->
     <div class="wiz-step" id="step3">
-      <div class="wiz-lab">STEP 03 · 10 题心境</div>
-      <h2 class="wiz-h" id="stepHeader">10 题心境快照 · 每题 ≤ 6 秒</h2>
-      <p class="wiz-d">A 清醒 · B 谨慎 · C 干扰 · D 高风险 — 点一下立即跳下一题。</p>
-      <div class="q-stack" id="qStack"></div>
-      <button class="q-back" id="qBack" style="display:none">← 上一题</button>
+      <div class="wiz-lab">STEP 03 · 周期 + 信心</div>
+      <h2 class="wiz-h">持有周期 + 信心指数</h2>
+      <p class="wiz-d">买多了别再做 10 题 —— 直接定性 + 给个信心百分比,30 秒封存当下判断。</p>
+      <div class="wiz-horizon" id="wizHorizon">
+        <button class="wh-btn" type="button" data-h="long"><b>长期股</b><span>看逻辑 · 拿几个月以上</span></button>
+        <button class="wh-btn" type="button" data-h="short"><b>短期股</b><span>看催化 / 价格 · 几天到几周</span></button>
+      </div>
+      <div class="wiz-conf">
+        <label>信心指数 <b id="confV">70%</b></label>
+        <input type="range" id="confR" min="0" max="100" value="70" step="5">
+        <div class="wc-scale"><span>没底 · 0</span><span>满信 · 100</span></div>
+      </div>
+      <button class="btn primary big" id="toStep4" disabled>完成 · 看结果 →</button>
     </div>
 
     <!-- step 4 -->
@@ -2292,7 +2314,7 @@ function bindLegend(){
 // ============================================================
 let WIZ = null;
 function defaultWiz(){
-  return { stage:1, type:"buy", ticker:null, name:null, price:null, currency:null, exchange:null, memo:"", date: new Date().toISOString().slice(0,10), answers:[], curQ:0 };
+  return { stage:1, type:"buy", ticker:null, name:null, price:null, currency:null, exchange:null, memo:"", date: new Date().toISOString().slice(0,10), horizon:null, confidence:70, curQ:0 };
 }
 function persistDraft(){
   if(!WIZ) return;
@@ -2370,9 +2392,32 @@ function showStep(n){
     dot.classList.toggle("on", i===n);
     dot.classList.toggle("done", i<n);
   });
-  if(n===3){ WIZ.curQ = 0; WIZ.answers = []; renderQuestion(); }
+  if(n===3){ renderStep3(); }
   if(n===4){ renderResult(); }
 }
+// step 3 · 周期 + 信心 (取代 10 题)
+function renderStep3(){
+  if(WIZ.horizon == null) WIZ.horizon = null;
+  if(WIZ.confidence == null) WIZ.confidence = 70;
+  const conf = document.getElementById("confR"), confV = document.getElementById("confV");
+  const next = document.getElementById("toStep4");
+  document.querySelectorAll("#wizHorizon .wh-btn").forEach(b => b.classList.toggle("on", b.dataset.h === WIZ.horizon));
+  conf.value = WIZ.confidence; confV.textContent = WIZ.confidence + "%";
+  next.disabled = !WIZ.horizon;
+}
+document.getElementById("wizHorizon").addEventListener("click",(e)=>{
+  const b = e.target.closest(".wh-btn"); if(!b) return;
+  WIZ.horizon = b.dataset.h;
+  document.querySelectorAll("#wizHorizon .wh-btn").forEach(x => x.classList.toggle("on", x === b));
+  document.getElementById("toStep4").disabled = false;
+  persistDraft();
+});
+document.getElementById("confR").addEventListener("input",(e)=>{
+  WIZ.confidence = +e.target.value;
+  document.getElementById("confV").textContent = WIZ.confidence + "%";
+  persistDraft();
+});
+document.getElementById("toStep4").addEventListener("click",()=>{ if(WIZ.horizon) showStep(4); });
 
 // step 1 · ticker search + quote
 let searchTimer = null;
@@ -2519,10 +2564,12 @@ document.getElementById("qBack").addEventListener("click",()=>{
 
 // step 4 · result
 function renderResult(){
-  const score = WIZ.answers.reduce((s,a)=>s+(SCORE[a] ?? 0), 0);
+  const conf = WIZ.confidence ?? 70;
+  const score = Math.round(conf * 0.3);     // 信心 0-100 → 分 0-30
   const state = scoreToState(score);
   WIZ._score = score;
   WIZ._state = state;
+  const hz = WIZ.horizon === "short" ? "短期股" : "长期股";
   document.getElementById("rsState").textContent = state;
   document.getElementById("rsState").className = "rs-state s-"+state;
   document.getElementById("rsEn").textContent = STATE_DEFS[state].en;
@@ -2530,9 +2577,9 @@ function renderResult(){
   document.getElementById("rsScore").textContent = score;
   document.getElementById("rsSnap").innerHTML = `
     <div>标的<b>${escapeHtml(WIZ.ticker)}</b></div>
+    <div>持有周期<b>${hz}</b></div>
+    <div>信心指数<b>${conf}%</b></div>
     <div>当时价<b>${formatPrice(WIZ.price)}${WIZ.currency ? " "+escapeHtml(WIZ.currency) : ""}</b></div>
-    <div>日期<b>${escapeHtml(WIZ.date)}</b></div>
-    <div>分数<b>${score} / 30</b></div>
   `;
 }
 document.getElementById("saveEntry").addEventListener("click",()=>{
@@ -2549,7 +2596,8 @@ document.getElementById("saveEntry").addEventListener("click",()=>{
     price: WIZ.price,
     currency: WIZ.currency,
     memo: WIZ.memo.trim(),
-    answers: WIZ.answers.slice(),
+    horizon: WIZ.horizon,
+    confidence: WIZ.confidence,
     score: WIZ._score,
     state: WIZ._state
   });
@@ -2764,14 +2812,11 @@ function entryHtml(e, tk, livePrice){
       <div class="entry-state-foot">
         <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
           <span class="esf-st s-${e.state}">${e.state} · ${e.score}/30</span>
+          ${e.horizon ? `<span>${e.horizon === "short" ? "短期股" : "长期股"} · 信心 ${e.confidence != null ? e.confidence + "%" : "—"}</span>` : ""}
         </div>
-        <div class="esf-actions">
-          <button data-toggle="${e.id}">▸ 看 10 题</button>
-        </div>
+        ${(e.answers && e.answers.length) ? `<div class="esf-actions"><button data-toggle="${e.id}">▸ 看 10 题</button></div>` : ""}
       </div>
-      <div class="entry-detail" id="ed-${e.id}" style="margin-top:14px">
-        ${QUESTIONS.map((q,i)=>`<div class="ed-row"><span class="ed-q">${i+1}. ${escapeHtml(q.h)}</span><span class="ed-a">${(e.answers||[])[i] || "—"} <em>${escapeHtml(q.opts[["A","B","C","D"].indexOf((e.answers||[])[i])] || "")}</em></span></div>`).join("")}
-      </div>
+      ${(e.answers && e.answers.length) ? `<div class="entry-detail" id="ed-${e.id}" style="margin-top:14px">${QUESTIONS.map((q,i)=>`<div class="ed-row"><span class="ed-q">${i+1}. ${escapeHtml(q.h)}</span><span class="ed-a">${(e.answers||[])[i] || "—"} <em>${escapeHtml(q.opts[["A","B","C","D"].indexOf((e.answers||[])[i])] || "")}</em></span></div>`).join("")}</div>` : ""}
     </div>
   `;
 }
