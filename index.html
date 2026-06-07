@@ -724,12 +724,9 @@ footer.foot a:hover{color:var(--gold-b)}
 html{background:#081421}
 body{
   background:
-    radial-gradient(900px 560px at 86% -5%,rgba(21,227,147,.16),transparent 64%),
-    radial-gradient(720px 520px at -8% 48%,rgba(56,199,221,.09),transparent 65%),
-    linear-gradient(rgba(255,255,255,.015) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(255,255,255,.015) 1px,transparent 1px),
+    radial-gradient(900px 560px at 86% -5%,rgba(21,227,147,.13),transparent 64%),
+    radial-gradient(720px 520px at -8% 48%,rgba(56,199,221,.07),transparent 65%),
     var(--bg);
-  background-size:auto,auto,34px 34px,34px 34px,auto;
 }
 body::before{
   content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;
@@ -941,12 +938,9 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{
 html[data-theme="light"],[data-theme="light"] body{background-color:var(--bg)}
 [data-theme="light"] body{
   background:
-    radial-gradient(840px 500px at 88% -4%,rgba(232,100,42,.16),transparent 66%),
-    radial-gradient(680px 440px at -6% 55%,rgba(201,138,62,.12),transparent 68%),
-    linear-gradient(rgba(58,48,38,.030) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(58,48,38,.030) 1px,transparent 1px),
+    radial-gradient(840px 500px at 88% -4%,rgba(232,100,42,.14),transparent 66%),
+    radial-gradient(680px 440px at -6% 55%,rgba(201,138,62,.10),transparent 68%),
     var(--bg);
-  background-size:auto,auto,34px 34px,34px 34px,auto;
 }
 [data-theme="light"] body::before{background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(232,100,42,.020))}
 [data-theme="light"] .topbar{background:rgba(247,250,242,.88);border-color:rgba(120,80,45,.14)}
@@ -1011,12 +1005,9 @@ html[data-theme="light"],[data-theme="light"] body{background-color:var(--bg)}
 [data-theme="color"] .book-card:nth-child(4n+4){background:var(--surface-card-4)}
 [data-theme="color"] body{
   background:
-    radial-gradient(900px 560px at 88% -5%,rgba(243,145,32,.18),transparent 64%),
-    radial-gradient(720px 520px at -8% 48%,rgba(79,187,188,.14),transparent 65%),
-    linear-gradient(rgba(226,218,194,.022) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(226,218,194,.022) 1px,transparent 1px),
+    radial-gradient(900px 560px at 88% -5%,rgba(243,145,32,.16),transparent 64%),
+    radial-gradient(720px 520px at -8% 48%,rgba(79,187,188,.12),transparent 65%),
     var(--bg);
-  background-size:auto,auto,34px 34px,34px 34px,auto;
 }
 html[data-theme="color"]{background:#222A2A}
 [data-theme="color"] body::before{background:linear-gradient(180deg,rgba(34,42,42,.10),rgba(15,20,20,.30))}
@@ -1264,7 +1255,7 @@ html[data-theme="color"]{background:#222A2A}
 .wsb-cell,
 [data-theme] .wsb-cell:nth-child(n){flex:1;min-height:0!important;padding:2px 22px!important;border:0!important;border-left:1px solid var(--line)!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;color:var(--mut)!important}
 .wsb-cell:first-child{border-left:0!important;padding-left:0!important}
-.wsb-cell b,[data-theme] .wsb-cell:nth-child(1) b{display:block;margin-top:4px!important;font-size:27px!important;color:var(--ink)!important;font-family:var(--mono);line-height:1;font-weight:700}
+.wsb-cell b,[data-theme] .wsb-cell:nth-child(1) b{display:block;margin-top:4px!important;font-size:20px!important;color:var(--ink)!important;font-family:var(--mono)!important;line-height:1.1;font-weight:700}
 .wsb-cell em{display:block;font-style:normal;font-size:10px;color:var(--tf);margin-top:3px}
 
 /* — 卡墙: 压缩 · 同色调一族 · 删装饰 — */
@@ -1288,8 +1279,12 @@ html[data-theme="color"]{background:#222A2A}
 .bk-name{margin-bottom:8px!important}
 .thesis-card{margin:8px 0 16px!important;padding:0 0 0 16px!important;border-radius:0!important;background:transparent!important;border-left:2px solid var(--gold)!important}
 .bk-trend{background:transparent!important;border:1px solid var(--line)!important;padding:11px!important;border-radius:10px!important}
-.book-stats{gap:0!important;margin-top:12px!important}
-.bs-cell{border-right:1px solid var(--line)!important;padding:10px 14px!important}
+/* book-stats 彩卡 → 无框细线 (压 nth-child 彩色填充) */
+.book-stats{gap:0!important;margin-top:14px!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;border-top:1px solid var(--line)!important;border-bottom:1px solid var(--line)!important}
+.bs-cell,
+[data-theme] .bs-cell:nth-child(n){background:transparent!important;border:0!important;border-right:1px solid var(--line)!important;border-radius:0!important;min-height:0!important;padding:13px 16px 13px 0!important;color:var(--mut)!important}
+.bs-cell:last-child{border-right:0!important}
+.bs-cell b{font-size:17px!important;margin-top:5px!important}
 
 /* ─── 便条: 贴时间线 · 高密度 · 突出正文 ─── */
 .notes-box{padding:0!important;border-radius:0!important;background:transparent!important;border:0!important;position:relative;margin-left:7px;padding-left:20px!important}
