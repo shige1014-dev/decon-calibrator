@@ -1484,6 +1484,10 @@ html,body{overflow-x:hidden;max-width:100%}
   .book-stats{grid-template-columns:repeat(2,minmax(0,1fr))!important}
   .nc-cols{flex-wrap:wrap!important;gap:7px 14px!important}
   .bk-trend{flex-wrap:wrap}
+  /* 手机: 笔记墙标题换行, 选择删除按钮不被挤出屏 */
+  .wall-head{flex-wrap:wrap!important;gap:6px 10px}
+  .wall-head em{margin-left:auto}
+  .wall-manage{font-size:12px;padding:6px 13px}
   .nc-title,.bc-memo,.entry-memo,.prin-text,.nc-meta{overflow-wrap:anywhere;word-break:break-word}
 }
 /* ═══════════════════════════════════════════════════════════════════════ */
@@ -2527,7 +2531,6 @@ function renderResult(){
     <div>当时价<b>${formatPrice(WIZ.price)}${WIZ.currency ? " "+escapeHtml(WIZ.currency) : ""}</b></div>
     <div>日期<b>${escapeHtml(WIZ.date)}</b></div>
     <div>分数<b>${score} / 30</b></div>
-    <div>标签<b style="font-family:var(--mono);font-size:14px">${computeTags(WIZ.answers).map(t=>PSY_TAGS[t]?.sym||"").join(" ")||"—"}</b></div>
   `;
 }
 document.getElementById("saveEntry").addEventListener("click",()=>{
@@ -2759,7 +2762,6 @@ function entryHtml(e, tk, livePrice){
       <div class="entry-state-foot">
         <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
           <span class="esf-st s-${e.state}">${e.state} · ${e.score}/30</span>
-          <span>答案 · ${(e.answers||[]).join(" · ")}</span>
         </div>
         <div class="esf-actions">
           <button data-toggle="${e.id}">▸ 看 10 题</button>
