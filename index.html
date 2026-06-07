@@ -1402,6 +1402,14 @@ html{scroll-behavior:smooth}
 .nc-title,.prin-text,.h-sub,.bc-memo,.entry-memo{text-wrap:pretty}
 .wh-link{color:var(--gold)!important;text-decoration:none}
 .wh-link:hover{color:var(--gold-b)!important}
+/* 滚动智慧: 投资名言 + 股票常识 (替代符号对表 LEGEND) */
+.wisdom{margin-top:38px;padding:20px 4px 8px;border-top:1px solid var(--line);cursor:pointer;position:relative;min-height:72px;opacity:0;transform:translateY(5px);transition:opacity .42s ease,transform .42s ease;-webkit-tap-highlight-color:transparent}
+.wisdom.show{opacity:1;transform:none}
+.wisdom:focus-visible{outline:2px solid var(--acc);outline-offset:4px}
+.wisdom-mark{font-family:var(--serif);font-size:26px;color:var(--gold);opacity:.45;line-height:.5}
+.wisdom-t{font-family:var(--serif);font-size:17px;line-height:1.65;color:var(--ink);max-width:660px;margin-top:8px;text-wrap:pretty}
+.wisdom-a{font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--gold);margin-top:9px}
+.wisdom:hover .wisdom-t{color:var(--gold-b)}
 /* 首页原则: 双列高密度 · 只读 · 编号降为柔和(不金) */
 .home-prin{display:grid;grid-template-columns:1fr 1fr;gap:0 34px;margin-bottom:4px}
 .home-prin .prin-item{padding:9px 0}
@@ -2051,10 +2059,6 @@ function renderHome(){
 }
 
 function bookCardHtml(r){
-  const tags = r.latestThesis ? computeTags(r.latestThesis.answers) : [];
-  const tagHtml = tags.length
-    ? tags.map(t => `<span class="bc-tag" style="color:${PSY_TAGS[t]?.color || 'var(--mut)'}">${PSY_TAGS[t]?.sym || ''}</span>`).join("")
-    : `<span class="bc-empty">无 thesis tag</span>`;
   const memo = r.latest?.memo
     ? `<div class="bc-memo">${escapeHtml(r.latest.memo)}</div>`
     : `<div class="bc-memo bc-empty">还没写一句话</div>`;
@@ -2068,7 +2072,6 @@ function bookCardHtml(r){
       </div>
       <div class="bc-name">${escapeHtml(r.b.name || r.tk)}<em>${escapeHtml(r.b.exchange || "")}</em></div>
       <div class="bc-price" id="bcp-${escapeHtml(r.tk)}"><span class="bc-load">载入价…</span></div>
-      <div class="bc-tags">${tagHtml}</div>
       <div class="bc-divider"></div>
       ${memo}
       <div class="bc-foot">
@@ -2115,42 +2118,55 @@ function computeStreak(dates){
   return streak;
 }
 
+// 滚动智慧 · 投资名言 + 股票常识 (替代符号对表)
+const WISDOM = [
+  {t:"价格是你付出的，价值是你得到的。", a:"巴菲特"},
+  {t:"别人贪婪时恐惧，别人恐惧时贪婪。", a:"巴菲特"},
+  {t:"反过来想，总是反过来想。", a:"查理·芒格"},
+  {t:"如果你不愿持有十年，就不要持有十分钟。", a:"巴菲特"},
+  {t:"市场短期是投票机，长期是称重机。", a:"格雷厄姆"},
+  {t:"安全边际，是投资里最重要的四个字。", a:"格雷厄姆"},
+  {t:"亏钱的从来不是市场，是你的纪律。", a:"利弗莫尔"},
+  {t:"大钱是坐着等出来的，不是频繁交易出来的。", a:"利弗莫尔"},
+  {t:"你不必对每一个球挥棒，等那个好打的。", a:"巴菲特"},
+  {t:"知道能力圈的边界，比能力圈多大更重要。", a:"巴菲特"},
+  {t:"重要的不是对错，而是对时赚多少、错时亏多少。", a:"索罗斯"},
+  {t:"风险来自你不知道自己在做什么。", a:"巴菲特"},
+  {t:"投资里最贵的一句话：这次不一样。", a:"约翰·邓普顿"},
+  {t:"我们无法预测，但可以为各种情形做好准备。", a:"霍华德·马克斯"},
+  {t:"卖掉你的失败者，留住你的赢家。", a:"彼得·林奇"},
+  {t:"在悲观中诞生，在怀疑中成长，在乐观中成熟，在亢奋中死亡。", a:"约翰·邓普顿"},
+  {t:"先想清楚能亏多少，再去想能赚多少。", a:"常识"},
+  {t:"没有止损计划的买入，是赌博不是投资。", a:"常识"},
+  {t:"满仓加杠杆，等于把命交给运气。", a:"常识"},
+  {t:"加仓摊薄成本，常常是把小亏拖成大亏。", a:"常识"},
+  {t:"一句话说不清为什么买，就先别买。", a:"常识"},
+  {t:"情绪最高时少动手，情绪最低时多观察。", a:"常识"},
+  {t:"现金，也是一种仓位。", a:"常识"},
+  {t:"看对大方向，比抓住每个波段更值钱。", a:"常识"},
+  {t:"回撤 50% 要涨 100% 才回本——先想着活下来。", a:"常识"},
+  {t:"你的本金只有一次，亏光了就没有下一局。", a:"常识"},
+];
+var _wIdx = -1, _wTimer = null;
+function showWisdom(){
+  const t = document.getElementById("wisdomT"), a = document.getElementById("wisdomA"), box = document.getElementById("wisdomBox");
+  if(!t || !box) return;
+  let n; do { n = Math.floor(Math.random() * WISDOM.length); } while(WISDOM.length > 1 && n === _wIdx);
+  _wIdx = n; const w = WISDOM[n];
+  box.classList.remove("show");
+  setTimeout(()=>{ t.textContent = w.t; a.textContent = "— " + w.a; box.classList.add("show"); }, 90);
+}
 function legendHtml(){
-  const stateRow = Object.entries(STATE_DEFS).map(([name, def]) =>
-    `<div class="legend-item"><div class="legend-item-row"><span class="sym" style="color:var(--st-${name});font-family:var(--mono)">${name.slice(0,1)}</span>${escapeHtml(name)} · ${def.en} <em style="color:var(--mut);font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;margin-left:6px">${def.range[0]}-${def.range[1]}</em></div><div class="legend-item-desc">${escapeHtml(def.desc)}</div></div>`).join("");
-  const tagRow = Object.entries(PSY_TAGS).map(([k, def]) =>
-    `<div class="legend-item"><div class="legend-item-row"><span class="sym" style="color:${def.color}">${def.sym}</span>${escapeHtml(def.label)}</div><div class="legend-item-desc">${escapeHtml(def.desc)}</div></div>`).join("");
-  const typeRow = Object.entries(ENTRY_TYPES).map(([k, def]) =>
-    `<div class="legend-item"><div class="legend-item-row"><span class="sym" style="color:var(--acc);font-size:10px">${def.en}</span>${escapeHtml(def.label)}</div><div class="legend-item-desc">${escapeHtml(def.desc)}</div></div>`).join("");
-  return `
-    <details class="legend" id="legendBox">
-      <summary class="legend-head" style="list-style:none">
-        <span>◇ LEGEND · 符号对表 · 4 心境 / 8 心理 tag / 5 操作类型</span>
-        <em>点开 ▾</em>
-      </summary>
-      <div class="legend-body" style="display:block">
-        <div class="legend-grid">
-          <div class="legend-divider">◇ 4 心境 STATE · 分数区间 0-21</div>
-          ${stateRow}
-        </div>
-        <div class="legend-grid" style="margin-top:8px">
-          <div class="legend-divider">◇ 8 心理 PSY-TAG · 答案模式自动挂</div>
-          ${tagRow}
-        </div>
-        <div class="legend-grid" style="margin-top:8px">
-          <div class="legend-divider">◇ 5 操作 ENTRY TYPE · 新建时选</div>
-          ${typeRow}
-        </div>
-      </div>
-    </details>`;
+  return `<div class="wisdom" id="wisdomBox" role="button" tabindex="0" title="点一下 · 换一条"><div class="wisdom-mark">❝</div><div class="wisdom-t" id="wisdomT"></div><div class="wisdom-a" id="wisdomA"></div></div>`;
 }
 function bindLegend(){
-  const box = document.getElementById("legendBox");
+  const box = document.getElementById("wisdomBox");
   if(!box) return;
-  // <details> auto-toggles; manually sync .open class for our own styling
-  const sync = () => box.classList.toggle("open", box.open);
-  box.addEventListener("toggle", sync);
-  sync();
+  showWisdom();
+  if(_wTimer) clearInterval(_wTimer);
+  _wTimer = setInterval(showWisdom, 7000);
+  box.addEventListener("click", showWisdom);
+  box.addEventListener("keydown", e => { if(e.key === "Enter" || e.key === " "){ e.preventDefault(); showWisdom(); } });
 }
 
 // ============================================================
