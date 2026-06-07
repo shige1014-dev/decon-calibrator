@@ -1287,8 +1287,9 @@ html[data-theme="color"]{background:#222A2A}
 /* 股票代码加粗 */
 .bc-tk,.bk-tk,.nc-tk{font-weight:900!important;letter-spacing:.04em}
 /* — 批量管理删除模式 — */
-.wall-manage{background:transparent;border:1px solid var(--line);color:var(--mut);font-family:var(--mono);font-size:10px;letter-spacing:.12em;padding:3px 11px;border-radius:6px;cursor:pointer;transition:border-color .15s,color .15s}
-.wall-manage:hover{border-color:var(--gold);color:var(--gold)}
+.wall-manage{background:transparent;border:1px solid var(--gold);color:var(--gold);font-family:var(--sans);font-size:11px;letter-spacing:.04em;font-weight:600;padding:5px 12px;border-radius:7px;cursor:pointer;transition:border-color .15s,color .15s,background .15s}
+.wall-manage:hover{background:var(--acc-soft)}
+.wall-manage.on{background:var(--neg);border-color:var(--neg);color:#fff}
 .manage-bar{display:flex;gap:10px;align-items:center;margin:0 0 14px}
 .mb-del{background:var(--neg);color:#fff;border:0;border-radius:8px;padding:10px 18px;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer}
 .mb-del em{font-style:normal;font-family:var(--mono);opacity:.9;margin-left:2px}
@@ -1434,6 +1435,14 @@ html{scroll-behavior:smooth}
 .ko-cell.rec b{color:var(--acc)}
 .k-verdict{font-family:var(--serif);font-size:15px;line-height:1.6;color:var(--ink);padding-left:14px;border-left:2px solid var(--gold);margin:0}
 @media(max-width:640px){ .ko-cell b{font-size:19px} .ko-cell{padding:12px 5px} }
+.k-note{margin-top:26px;padding-top:18px;border-top:1px solid var(--line)}
+.k-note-h{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;margin-bottom:12px}
+.k-note ul{list-style:none;margin:0 0 14px;padding:0}
+.k-note li{position:relative;padding:0 0 9px 16px;font-size:13.5px;line-height:1.65;color:var(--ink-2)}
+.k-note li::before{content:"·";position:absolute;left:2px;color:var(--gold);font-weight:700}
+.k-note li b{color:var(--ink);font-weight:600}
+.k-note-f{font-family:var(--serif);font-size:14.5px;line-height:1.65;color:var(--ink);padding-left:14px;border-left:2px solid var(--gold);margin:0}
+.k-note-f b{color:var(--gold-b)}
 /* 首页原则: 双列高密度 · 只读 · 编号降为柔和(不金) */
 .home-prin{display:grid;grid-template-columns:1fr 1fr;gap:0 34px;margin-bottom:4px}
 .home-prin .prin-item{padding:9px 0}
@@ -1689,6 +1698,18 @@ html,body{overflow-x:hidden;max-width:100%}
       <div class="ko-cell rec"><label>¼ 凯利 · 推荐</label><b id="kQuarter">—</b></div>
     </div>
     <p class="k-verdict" id="kVerdict"></p>
+
+    <div class="k-note">
+      <div class="k-note-h">◆ 怎么读</div>
+      <ul>
+        <li><b>胜率 p</b> · 你估这笔多大概率赚钱(不是涨 · 是真赚)。诚实点 —— 多数人高估自己。</li>
+        <li><b>赔率 b</b> · 赢一次赚的 ÷ 输一次亏的。例:赢赚 50% / 输亏 25% → b = 2。</li>
+        <li><b>满凯利</b> · 数学最优增长,但波动巨大、回撤常 50%+,且你一旦高估胜率就送命 —— <b>别用</b>。</li>
+        <li><b>¼ 凯利</b> · 实战推荐。牺牲一点长期增速,换大幅降波动 + 容错你的估计误差。</li>
+        <li>公式判 <b>0%</b> = 没有正期望,这笔本就不该下注。</li>
+      </ul>
+      <p class="k-note-f">凯利是<b>上限刹车</b> · 不是目标油门。把推荐值当"绝不超过",再和你自己的 15% 单仓原则取小者执行。</p>
+    </div>
   </div>
 </section>
 
@@ -2087,7 +2108,7 @@ function renderHome(){
     <ol class="prin-list home-prin">${prins.slice(0,6).map(p=>`<li class="prin-item"><span class="prin-text">${escapeHtml(p.text)}</span></li>`).join("")}</ol>
   ` : `<div class="wall-head"><span>◆ 我的原则 · PRINCIPLES</span><em><a href="#/log" class="wh-link">去经验台定下第一条 ›</a></em></div>`;
 
-  const manageBtn = totalBooks ? ` · <button class="wall-manage" id="btnManage" type="button">${bookManage ? "完成" : "管理"}</button>` : "";
+  const manageBtn = totalBooks ? ` · <button class="wall-manage${bookManage ? " on" : ""}" id="btnManage" type="button">${bookManage ? "✓ 完成" : "🗑 选择删除"}</button>` : "";
   const wallHead = `<div class="wall-head" style="margin-top:30px"><span>◇ 笔记墙 · MY BOOKS</span><em>${totalBooks} 本${manageBtn}</em></div>`
     + (bookManage ? `<div class="manage-bar"><button class="mb-del" id="btnDelSel" type="button">删除选中 <em id="selN">0</em></button><button class="mb-all" id="btnSelAll" type="button">全选</button></div>` : "");
 
