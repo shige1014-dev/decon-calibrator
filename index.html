@@ -1327,15 +1327,18 @@ html[data-theme="color"]{background:#222A2A}
 .entry-detail .ed-a{word-break:normal;overflow-wrap:anywhere}
 
 /* ─── 便条: 贴时间线 · 高密度 · 突出正文 ─── */
-.notes-box{padding:0!important;border-radius:0!important;background:transparent!important;border:0!important;position:relative;margin-left:7px;padding-left:20px!important}
-.notes-box::before{content:"";position:absolute;left:0;top:6px;bottom:6px;width:2px;background:var(--line)}
+.notes-box{padding:0!important;border-radius:0!important;background:transparent!important;border:0!important;position:relative}
 .notes-stack{display:block!important}
 .note-card,
-[data-theme] .note-card{min-height:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;padding:18px 2px 20px 0!important;border-bottom:1px solid var(--line)!important;position:relative;margin:0!important}
-.note-card::before{content:"";position:absolute;left:-25px;top:15px;width:9px;height:9px;border-radius:50%;background:var(--acc);box-shadow:0 0 0 3px var(--bg)}
-.note-card.s-漂移::before{background:var(--st-drift)}
-.note-card.s-干扰::before{background:var(--st-noise)}
-.note-card.s-接管::before{background:var(--st-chaos)}
+[data-theme] .note-card{min-height:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;padding:18px 2px 20px 28px!important;border-bottom:1px solid var(--line)!important;position:relative;margin:0!important}
+/* 垂直时间线: 连续竖线(每条一段) + 状态色节点 */
+.note-card::before{content:"";position:absolute;left:5px;top:0;bottom:0;width:2px;background:var(--line)}
+.note-card:first-child::before{top:24px}
+.note-card:last-child::before{bottom:auto;height:24px}
+.note-card::after{content:"";position:absolute;left:0;top:22px;width:12px;height:12px;border-radius:50%;background:var(--acc);box-shadow:0 0 0 3px var(--bg),0 0 8px var(--acc);z-index:1}
+.note-card.s-漂移::after{background:var(--st-drift);box-shadow:0 0 0 3px var(--bg),0 0 8px var(--st-drift)}
+.note-card.s-干扰::after{background:var(--st-noise);box-shadow:0 0 0 3px var(--bg),0 0 8px var(--st-noise)}
+.note-card.s-接管::after{background:var(--st-chaos);box-shadow:0 0 0 3px var(--bg),0 0 8px var(--st-chaos)}
 .note-card:hover{background:transparent!important;transform:none!important}
 .nc-top{display:flex;align-items:center;gap:10px;margin-bottom:5px!important}
 .nc-tk{background:transparent!important;border:0!important;padding:0!important;color:var(--gold)!important;font-family:var(--mono);font-weight:700;font-size:12.5px;letter-spacing:.04em}
@@ -1410,9 +1413,8 @@ html[data-theme="color"]{background:#222A2A}
 .prin-del:hover{color:var(--neg);opacity:1}
 .log-empty{list-style:none;color:var(--mut);font-size:13px;padding:14px 0;font-family:var(--serif)}
 .lesson-card .nc-title{font-family:var(--serif)}
-/* 经验日记: 清晰金色时间线节点 */
-.lesson-card::before{background:var(--gold)!important;box-shadow:0 0 7px var(--gold);width:10px!important;height:10px!important}
-#lessonList.notes-box::before{background:var(--line)}
+/* 经验日记: 金色时间线节点 */
+.lesson-card::after{background:var(--gold)!important;box-shadow:0 0 0 3px var(--bg),0 0 8px var(--gold)!important}
 .lesson-card .nc-meta{color:var(--gold)!important;font-size:11px!important}
 /* — redesign-skill 精修: 按压反馈 + 平滑滚动 + 数字对齐 + 防孤字 — */
 html{scroll-behavior:smooth}
@@ -2207,7 +2209,7 @@ function bookCardHtml(r){
       <span class="bc-check" aria-hidden="true"></span>
       <div class="bc-head">
         <span class="bc-tk">${escapeHtml(r.tk)}</span>
-        <span class="bc-state s-${r.latestState}">${r.latestState}${r.latestThesis ? " · "+r.latestThesis.score+"/30" : ""}</span>
+        <span class="bc-state s-${r.latestState}">${r.latestState}${r.latestThesis ? (r.latestThesis.confidence != null ? " · 信心 "+r.latestThesis.confidence+"%" : " · "+r.latestThesis.score+"/30") : ""}</span>
       </div>
       <div class="bc-name">${escapeHtml(r.b.name || r.tk)}<em>${escapeHtml(r.b.exchange || "")}</em></div>
       <div class="bc-price" id="bcp-${escapeHtml(r.tk)}"><span class="bc-load">载入价…</span></div>
@@ -2856,7 +2858,6 @@ function noteCardHtml(e, tk, livePrice){
     <div class="note-card ${sf}">
       <button class="note-card-del" data-note-del="${e.id}" title="删除">✕</button>
       <div class="nc-top">
-        <span class="nc-dot" style="background:var(--st-${e.state || '清醒'});box-shadow:0 0 8px var(--st-${e.state || '清醒'})"></span>
         ${e.mood ? `<span class="nc-mood">${e.mood}</span>` : ""}
         <span class="nc-tk">${escapeHtml(tk)}</span>
         <span class="nc-meta">${d}${e.time ? " · "+escapeHtml(e.time) : ""}</span>
