@@ -1346,6 +1346,30 @@ html[data-theme="color"]{background:#222A2A}
 .prin-del:hover{color:var(--neg);opacity:1}
 .log-empty{list-style:none;color:var(--mut);font-size:13px;padding:14px 0;font-family:var(--serif)}
 .lesson-card .nc-title{font-family:var(--serif)}
+.wh-link{color:var(--gold)!important;text-decoration:none}
+.wh-link:hover{color:var(--gold-b)!important}
+/* 首页原则: 双列高密度 · 只读 */
+.home-prin{display:grid;grid-template-columns:1fr 1fr;gap:0 34px;margin-bottom:4px}
+.home-prin .prin-item{padding:9px 0}
+.home-prin .prin-text{font-size:14px}
+
+/* ─── 手机溢出修复: 防横向超屏 ─── */
+html,body{overflow-x:hidden;max-width:100%}
+.wsb-cell{min-width:0}
+@media(max-width:640px){
+  .topbar{padding:9px 14px!important}
+  .hero{padding:24px 18px 20px!important;margin-top:10px!important}
+  .h-title{font-size:clamp(26px,8vw,34px)!important}
+  .h-sub{font-size:13px!important}
+  .wall-statsbar{flex-wrap:wrap!important;gap:0!important}
+  .wsb-cell,[data-theme] .wsb-cell:nth-child(n){flex:1 1 44%!important;min-width:0!important;padding:7px 12px!important;border-left:1px solid var(--line)!important}
+  .wsb-cell:nth-child(odd){border-left:0!important;padding-left:0!important}
+  .wsb-cell b,[data-theme] .wsb-cell:nth-child(1) b{font-size:21px!important}
+  .home-prin{grid-template-columns:1fr!important}
+  .books-grid{grid-template-columns:1fr!important}
+  .log-add{flex-wrap:wrap}
+  .log-add .btn{flex:1 1 100%}
+}
 /* ═══════════════════════════════════════════════════════════════════════ */
 </style>
 </head>
@@ -1353,10 +1377,6 @@ html[data-theme="color"]{background:#222A2A}
 
 <header class="topbar">
   <a class="brand" href="#/"><span class="mk">⌗</span> 股票<b>日记</b></a>
-  <form class="tb-search" id="searchForm">
-    <span class="si">🔍</span>
-    <input type="text" id="searchInput" placeholder="搜 ticker · 公司名 · 一句话…" autocomplete="off">
-  </form>
   <div class="tb-right">
     <a class="settings-btn" href="#/log" id="btnLog" title="经验台 · 原则 + 经验日记">📔</a>
     <button class="settings-btn" id="btnSettings" title="设置 · 备份">⚙</button>
@@ -1446,7 +1466,7 @@ html[data-theme="color"]{background:#222A2A}
         </div>
       </div>
       <div class="cta-row" style="margin-top:24px">
-        <button class="btn primary" id="toStep3" disabled>下一步 · 进 10 题 →</button>
+        <button class="btn primary" id="toStep3" disabled>下一步 →</button>
         <button class="btn" id="backStep1">← 返回选股</button>
       </div>
     </div>
@@ -1871,12 +1891,18 @@ function renderHome(){
     </div>
   `;
 
-  const wallHead = `<div class="wall-head"><span>◇ 笔记墙 · MY BOOKS</span><em>${totalBooks} 本 · 按最新活动排</em></div>`;
+  const prins = (logStore().principles) || [];
+  const prinBlock = prins.length ? `
+    <div class="wall-head"><span>◆ 我的原则 · PRINCIPLES</span><em><a href="#/log" class="wh-link">${prins.length} 条 · 经验台 ›</a></em></div>
+    <ol class="prin-list home-prin">${prins.slice(0,6).map(p=>`<li class="prin-item"><span class="prin-text">${escapeHtml(p.text)}</span></li>`).join("")}</ol>
+  ` : `<div class="wall-head"><span>◆ 我的原则 · PRINCIPLES</span><em><a href="#/log" class="wh-link">去经验台定下第一条 ›</a></em></div>`;
+
+  const wallHead = `<div class="wall-head" style="margin-top:30px"><span>◇ 笔记墙 · MY BOOKS</span><em>${totalBooks} 本 · 按最新活动排</em></div>`;
 
   const cards = rows.map(r => bookCardHtml(r)).join("");
   const newCard = `<a class="bc-new" href="#/new"><span><b>+</b>新建笔记</span></a>`;
 
-  list.innerHTML = demoBanner + statsBar + wallHead + `<div class="books-grid">${cards}${newCard}</div>` + legendHtml();
+  list.innerHTML = demoBanner + statsBar + prinBlock + wallHead + `<div class="books-grid">${cards}${newCard}</div>` + legendHtml();
 
   const btnD = document.getElementById("btnDismissDemo");
   if(btnD) btnD.addEventListener("click",(e)=>{ e.preventDefault(); dismissDemo(); });
@@ -2703,11 +2729,14 @@ function highlight(text, q){
 }
 
 // search form submit
-document.getElementById("searchForm").addEventListener("submit",(e)=>{
-  e.preventDefault();
-  const q = document.getElementById("searchInput").value.trim();
-  if(q) location.hash = "#/search?q="+encodeURIComponent(q);
-});
+// 顶栏搜索已移除 (searchForm 不存在时跳过绑定)
+(function(){ const sf = document.getElementById("searchForm"); if(!sf) return;
+  sf.addEventListener("submit",(e)=>{
+    e.preventDefault();
+    const q = document.getElementById("searchInput").value.trim();
+    if(q) location.hash = "#/search?q="+encodeURIComponent(q);
+  });
+})();
 
 // ============================================================
 // settings popover · export / import / clear
