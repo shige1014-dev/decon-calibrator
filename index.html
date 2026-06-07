@@ -1352,8 +1352,8 @@ html[data-theme="color"]{background:#222A2A}
 .nc-col{display:flex!important;align-items:baseline;gap:6px;min-height:0!important}
 .nc-col label{font-family:var(--mono);font-size:9px!important;letter-spacing:.12em;color:var(--tf)!important;text-transform:uppercase}
 .nc-col b{font-family:var(--mono);font-size:11.5px!important;color:var(--ink-2)!important;font-weight:600}
-.note-card-del{opacity:0;transition:opacity .15s;color:var(--tf)!important}
-.note-card:hover .note-card-del{opacity:.6}
+.note-card-del{opacity:.5;transition:opacity .15s,color .15s;color:var(--tf)!important;width:30px;height:30px;display:grid;place-items:center;font-size:16px;top:6px!important;right:2px!important;padding:0!important;z-index:3}
+.note-card-del:hover,.note-card-del:active{opacity:1;color:var(--neg)!important}
 .note-card-toggle{margin-top:8px!important;font-size:10.5px!important;color:var(--mut)!important;background:transparent!important;border:0!important;padding:0!important}
 
 /* — 贴便条弹窗: 限高内滚 · 压紧 (桌面不再溢出截断) — */
