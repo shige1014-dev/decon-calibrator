@@ -5,6 +5,14 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>股票日记 · STOCK JOURNAL · 心境快照</title>
 <meta name="description" content="情绪化会改写认知 · 10 题心境快照 + 一句话理由 · 把每一次买入的初衷封进时间胶囊">
+<meta property="og:type" content="website">
+<meta property="og:title" content="股票日记 · STOCK JOURNAL">
+<meta property="og:description" content="情绪化会改写认知 · 把每一次买入的初衷封进时间胶囊 · 原则 + 经验日记累积">
+<meta property="og:image" content="/icons/icon-512.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="股票日记 · STOCK JOURNAL">
+<meta name="twitter:description" content="心境快照 + 一句话理由 · 把买入初衷封进时间胶囊">
+<meta name="twitter:image" content="/icons/icon-512.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;700;900&display=swap" rel="stylesheet">
@@ -1362,6 +1370,12 @@ html[data-theme="color"]{background:#222A2A}
 .prin-del:hover{color:var(--neg);opacity:1}
 .log-empty{list-style:none;color:var(--mut);font-size:13px;padding:14px 0;font-family:var(--serif)}
 .lesson-card .nc-title{font-family:var(--serif)}
+/* — redesign-skill 精修: 按压反馈 + 平滑滚动 + 数字对齐 + 防孤字 — */
+html{scroll-behavior:smooth}
+.btn:active,.type-chip:active,.note-type-btn:active,.note-prio-btn:active,.q-opt:active,.nm-opt:active,.theme-btn:active,.settings-btn:active,.bc-new:active{transform:scale(.97)}
+.bc-price,.bk-price b,.bs-cell b,.tk-q-price,.entry-date-big,.bc-tk,.bk-tk,.nc-tk,.nc-cols b,.rs-score{font-variant-numeric:tabular-nums}
+.h-title,.bk-name,.bc-name,.wiz-h,.q-text{text-wrap:balance}
+.nc-title,.prin-text,.h-sub,.bc-memo,.entry-memo{text-wrap:pretty}
 .wh-link{color:var(--gold)!important;text-decoration:none}
 .wh-link:hover{color:var(--gold-b)!important}
 /* 首页原则: 双列高密度 · 只读 · 编号降为柔和(不金) */
