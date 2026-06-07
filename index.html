@@ -1331,7 +1331,7 @@ html[data-theme="color"]{background:#222A2A}
 .notes-box::before{content:"";position:absolute;left:0;top:6px;bottom:6px;width:2px;background:var(--line)}
 .notes-stack{display:block!important}
 .note-card,
-[data-theme] .note-card{min-height:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;padding:11px 2px 13px 0!important;border-bottom:1px solid var(--line)!important;position:relative;margin:0!important}
+[data-theme] .note-card{min-height:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;padding:18px 2px 20px 0!important;border-bottom:1px solid var(--line)!important;position:relative;margin:0!important}
 .note-card::before{content:"";position:absolute;left:-25px;top:15px;width:9px;height:9px;border-radius:50%;background:var(--acc);box-shadow:0 0 0 3px var(--bg)}
 .note-card.s-漂移::before{background:var(--st-drift)}
 .note-card.s-干扰::before{background:var(--st-noise)}
@@ -1368,6 +1368,7 @@ html[data-theme="color"]{background:#222A2A}
 .nmood-btn:active{transform:scale(.93)}
 .nmood-btn.on{border-color:var(--acc);background:var(--acc-soft);filter:none;transform:scale(1.05)}
 .nc-mood{font-size:15px;line-height:1;margin-right:1px}
+.nc-dot{width:9px;height:9px;border-radius:50%;flex:none;display:inline-block}
 
 /* — 经验台: 原则编号列表 + 经验日记表单/时间线 — */
 /* hero 不喧宾夺主: 大标题块 → 细线 slim 头 */
@@ -2828,6 +2829,7 @@ function noteCardHtml(e, tk, livePrice){
     <div class="note-card ${sf}">
       <button class="note-card-del" data-note-del="${e.id}" title="删除">✕</button>
       <div class="nc-top">
+        <span class="nc-dot" style="background:var(--st-${e.state || '清醒'});box-shadow:0 0 8px var(--st-${e.state || '清醒'})"></span>
         ${e.mood ? `<span class="nc-mood">${e.mood}</span>` : ""}
         <span class="nc-tk">${escapeHtml(tk)}</span>
         <span class="nc-meta">${d}${e.time ? " · "+escapeHtml(e.time) : ""}</span>
